@@ -10,5 +10,9 @@ Intern.config(function($routeProvider) {
     controller: 'LoginController',
     controllerAs: 'LoginCtrl',
     templateUrl: app + 'login/login.tpl.html'
+  }).when('/member', {
+    controller: 'ProfileController',
+    controllerAs: 'ProfileCtrl',
+    templateUrl: app + 'profile/profile.tpl.html'
   });
 });

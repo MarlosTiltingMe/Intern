@@ -1,0 +1,18 @@
+<div class="container" align="center">
+  <h1>Welcome to osu!</h1>
+  <button type="button" class="min-button">Login</button>
+  <button type="button" class="min-button">Register</button>
+</div>
+
+<div class="postContainer" align="center">
+  <h3 id="header">News..</h3>
+  <div ng-repeat="board in boardList">
+    <div class="newsContainer">
+        <h2>{{board.title}}</h2><h4 style="font-style:italic">By {{board.owner}}</h4>
+        <p style="text-align:left;">{{board.image}}</p>
+        <p>{{board.created|date}}</p>
+        <p>{{board.desc}}</p>
+      </div>
+    </div>
+  </div>
+</div>

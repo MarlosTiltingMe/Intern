@@ -26,6 +26,7 @@ function ThreadsService($http) {
   return {
     create: create,
     list: list,
+    get: get,
     update: update,
     destroy: destroy
   };
