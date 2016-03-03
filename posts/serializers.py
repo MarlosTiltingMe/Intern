@@ -1,15 +1,16 @@
 from rest_framework import serializers
-from posts.models import Thread
+from posts.models import Threads
 from django.contrib.auth.models import User
 
 class ThreadSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    thread = serializers.HyperlinkedIdentityField(view_name='thread-detail', format='html')
     class Meta:
-        model = Thread
-        fields = ('id', 'title', 'image')
+        model = Threads
+        fields = ('url', 'created', 'id', 'title', 'body', 'image', 'owner', 'thread')
 
 class UserSerializer(serializers.ModelSerializer):
-    threads = serializers.PrimaryKeyRelatedField(many=True, queryset=Thread.objects.all())
-    owner = serializers.ReadOnlyField(source='owner.username')
+    threads = serializers.HyperlinkedRelatedField(many=True, view_name='thread-detail', read_only=True)
     class Meta:
         model = User
-        fields = ('id', 'username', 'threads', 'owner')
+        fields = ('url', 'id', 'username', 'threads')
