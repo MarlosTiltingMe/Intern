@@ -1,6 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Poiret+One);
 body {
-  font-family:'Poiret One';
-  color:white;
-  background-color:#232323;
+  color:white !important;
+  background-color:#222 !important;
+}
+#nav {
+  -webkit-box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.25);
+  -moz-box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.25);
+  box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.25);
+  margin-bottom:10px;
+}
+.container {
+  width:50%;
+}
+.container input, button {
+  margin:5px;
 }

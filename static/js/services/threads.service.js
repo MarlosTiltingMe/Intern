@@ -12,7 +12,7 @@ function ThreadsService($http) {
   }
 
   function get(id) {
-    return $http.get('/api/threads/' + id + '/', post);
+    return $http.get('/api/threads/' + id + '/');
   }
 
   function update(id, post) {

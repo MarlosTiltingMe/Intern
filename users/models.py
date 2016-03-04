@@ -3,7 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.db import models
 
 class UserAccountManager(BaseUserManager):
-	def create_user(self, email, username, password=None):
+	def create_user(self, email, username, password):
 		if not email:
 			raise ValueError('Users must have a valid email address.')
 		if not username:
@@ -27,7 +27,9 @@ class UserAccount(AbstractBaseUser):
     username = models.CharField(max_length=16, unique=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     is_admin = models.BooleanField(default=False)
-    
+
+    auth_token = models.CharField(max_length=100, unique=True)
+
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 

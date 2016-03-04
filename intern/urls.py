@@ -33,6 +33,5 @@ urlpatterns = [
     url(r'^api/boards/(?P<pk>[0-9]+)/$',
         views.BoardDetail.as_view(),
         name='board-detail'),
-
     url(r'^.*$', IndexView.as_view(), name='index'),
 ]

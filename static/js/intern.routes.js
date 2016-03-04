@@ -6,13 +6,17 @@ Intern.config(function($routeProvider) {
     controller: 'HomeController',
     controllerAs: 'HomeCtrl',
     templateUrl: app + 'home/home.tpl.html'
-  }).when('/login', {
-    controller: 'LoginController',
-    controllerAs: 'LoginCtrl',
-    templateUrl: app + 'login/login.tpl.html'
+  }).when('/auth', {
+    controller: 'AuthController',
+    controllerAs: 'AuthCtrl',
+    templateUrl: app + 'auth/auth.tpl.html'
   }).when('/member', {
     controller: 'ProfileController',
     controllerAs: 'ProfileCtrl',
     templateUrl: app + 'profile/profile.tpl.html'
+  }).when('/login', {
+    controller: 'AuthController',
+    controllerAs: 'AuthCtrl',
+    templateUrl: app + 'auth/login.tpl.html'
   });
 });

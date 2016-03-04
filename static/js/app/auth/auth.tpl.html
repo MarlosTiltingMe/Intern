@@ -1,0 +1,7 @@
+<div class="container">
+  <input type="email" class="form-control" id="email" name="email" ng-model="email" placeholder="Email" />
+  <input type="text" class="form-control" id="username" name="username" ng-model="username" placeholder="Username" />
+  <input type="password" class="form-control" id="password" name="password" ng-model="password" placeholder="Password" />
+  <button type="submit" class="btn btn-primary" ng-click="register(email, username, password)">Submit</button>
+</div>
+{{user.getAuthenticatedAccount().config}}

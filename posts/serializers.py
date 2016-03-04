@@ -4,10 +4,9 @@ from django.contrib.auth.models import User
 
 class ThreadSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    thread = serializers.HyperlinkedIdentityField(view_name='thread-detail', format='html')
     class Meta:
         model = Threads
-        fields = ('url', 'created', 'id', 'title', 'body', 'image', 'owner', 'thread')
+        fields = ('url', 'created', 'id', 'title', 'body', 'image', 'owner')
 
 class BoardSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')

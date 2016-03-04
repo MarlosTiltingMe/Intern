@@ -1,17 +1,1 @@
-<div class="container" align="center">
-  <h1>Welcome to osu!</h1>
-  <button type="button" class="min-button">Login</button>
-  <button type="button" class="min-button">Register</button>
-</div>
-
-<div class="postContainer" align="center">
-  <h3 id="header">News..</h3>
-  <div ng-repeat="thread in threadList">
-    <div class="newsContainer">
-        <h2>{{thread.title}}</h2><h4 style="font-style:italic">By {{thread.owner}}</h4>
-        <p style="text-align:left;">{{thread.body}}</p>
-        <p style="font-style:italic">Posted on <i>{{thread.created | date }}</i></p>
-      </div>
-    </div>
-  </div>
-</div>
+{{user.getAuthenticatedAccount().username}}
