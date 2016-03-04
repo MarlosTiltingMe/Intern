@@ -27,9 +27,6 @@ class UserAccount(AbstractBaseUser):
     username = models.CharField(max_length=16, unique=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     is_admin = models.BooleanField(default=False)
-
-    auth_token = models.CharField(max_length=100, unique=True)
-
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 
@@ -54,7 +51,9 @@ class UserAccount(AbstractBaseUser):
     @property
     def is_staff(self):
 	    return self.is_admin
-    def has_perm(self, obj=None):
+    def has_perms(self, obj=None):
 	    return self.is_admin
+    def has_perm(self, obj=None):
+		return self.is_admin
     def has_module_perms(self, app_label):
 	    return self.is_admin
