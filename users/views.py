@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User, Group
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, generics
 from users.serializers import UserSerializer
@@ -17,3 +16,10 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class UserByName(generics.ListCreateAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return User.objects.filter(username=username)

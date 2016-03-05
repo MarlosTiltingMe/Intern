@@ -1,9 +1,9 @@
 Intern.factory("AuthService", AuthService);
-AuthService.$inject = ['$cookies', '$http', '$rootScope'];
+AuthService.$inject = ['$cookies', '$http'];
 
-function AuthService($cookies, $http, $rootScope) {
+function AuthService($cookies, $http) {
   var AuthService = {
-    getAuthenticatedAccount: getAuthenticatedAccount,
+    checkAuth: checkAuth,
     isAuthenticated: isAuthenticated,
     login: login,
     logout: logout,
@@ -14,16 +14,18 @@ function AuthService($cookies, $http, $rootScope) {
 
   return AuthService;
 
-  function getAuthenticatedAccount() {
-    if(!$cookies.authenticatedAccount) {
-      return;
-    }
-    console.log('a');
-    return JSON.parse($cookies.authenticatedAccount);
+  function checkAuth(username) {
+    return $http.get('/api/user/' + username + '/').success(function(data) {
+      return data;
+    })
+    .error(function(err) {
+      console.log(err)
+      return err;
+    });
   }
 
   function isAuthenticated() {
-    return !!$cookies.authenticatedAccount;
+    return !!$cookies.session;
   }
 
   function login(username, password) {
@@ -34,11 +36,11 @@ function AuthService($cookies, $http, $rootScope) {
 
     function loginSuccessFn(data, status, headers, config) {
       AuthService.setAuthenticatedAccount(data.config.data);
-      //window.location = '/';
+    //  window.location = '/';
     }
 
     function loginErrorFn(data, status, headers, config) {
-      console.log(data.data);
+      alert('Error logging you in');
     }
   }
 
@@ -48,7 +50,7 @@ function AuthService($cookies, $http, $rootScope) {
 
       function logoutSuccessFn(data, status, headers, config) {
         AuthService.unauthenticate();
-      //  window.location = '/';
+        window.location = '/';
       }
 
       function logoutErrorFn(data, status, headers, config) {
@@ -56,17 +58,16 @@ function AuthService($cookies, $http, $rootScope) {
       }
   }
 
-  function register(email, username, password, auth_token) {
+  function register(email, username, password) {
     return $http.post('/api/users/', {
       email: email,
       username: username,
-      password: password,
-      auth_token: auth_token
+      password: password
     }).then(registerSuccessFn, registerErrorFn);
 
     function registerSuccessFn(data, status, headers, config) {
       AuthService.login(username, password);
-    //  window.location = '/';
+      window.location = '/';
     }
 
     function registerErrorFn(data, status, headers, config) {
@@ -75,20 +76,22 @@ function AuthService($cookies, $http, $rootScope) {
   }
 
   function setAuthenticatedAccount(account) {
-    var authdata = Base64.encode(account.username + ':' + account.password);
-    $rootScope.globals = {
-      currentUser: {
-        username: account.username,
-        authdata: authdata
-      }
-    };
-    $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
-    $cookies.put('session', $rootScope.globals);
-    var a = JSON.parse($cookies.get('session'));
-    console.log(a);
+    return $http.post('/api-token-auth/', {
+      username: account.username,
+      password: account.password
+    }).then(authSuccessFn, authErrorFn);
+
+    function authSuccessFn(data, status, headers, config) {
+      $cookies.put('session', data.data.token);
+      $cookies.put('name', account.username);
+    }
+
+    function authErrorFn(data, status, headers, config) {
+      alert('There was an error retrieving your authentication token! Right info?');
+    }
   }
 
   function unauthenticate() {
-    delete $cookies.authenticatedAccount;
+    delete $cookies.session;
   }
 }

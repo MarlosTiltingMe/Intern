@@ -1,5 +1,9 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from rest_framework.authtoken.models import Token
+from intern import settings
 from django.db import models
 
 class UserAccountManager(BaseUserManager):
@@ -57,3 +61,8 @@ class UserAccount(AbstractBaseUser):
 		return self.is_admin
     def has_module_perms(self, app_label):
 	    return self.is_admin
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

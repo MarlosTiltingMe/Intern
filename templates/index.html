@@ -5,16 +5,19 @@
   <base href="/"/>
   {% include 'styles.html' %}
 </head>
-<body>
+<body ng-controller="AuthController as auth">
+  {%verbatim%}
+  {{auth.checkAuth('carter')}}
   <div id="nav" class="nav navbar-inverse">
     <a class="navbar-brand" href="/board">Marlo</a>
       <ul class="nav navbar-nav navbar-left">
         <li><a href="/board/members/"></a></li>
-          <li><a href="/board/members/Carter"></a></li>
+          <li><a href="">{{user}}</a></li>
           <li><a href="/logout">Logout</a></li>
     </ul>
 </div>
   <ng-view>
+    {%endverbatim%}
   {% include 'scripts.html' %}
 </body>
 </html>

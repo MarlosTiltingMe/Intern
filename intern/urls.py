@@ -1,7 +1,8 @@
 from django.conf.urls import url, include
 from rest_framework import routers
+from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.urlpatterns import format_suffix_patterns
-from users.views import UserViewSet, UserList, UserDetail
+from users.views import UserViewSet, UserList, UserDetail, UserByName
 from posts import views
 from django.contrib import admin
 from intern.views import IndexView
@@ -27,5 +28,8 @@ urlpatterns = [
     url(r'^api/users/(?P<pk>[0-9]+)/$',
         UserDetail.as_view(),
         name='user-detail'),
+    url(r'api-token-auth/', obtain_auth_token),
+    url(r'api/user/(?P<username>.+)/$',
+        UserByName.as_view()),
     url(r'^.*$', IndexView.as_view(), name='index'),
 ]
