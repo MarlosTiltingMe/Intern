@@ -18,5 +18,9 @@ Intern.config(function($routeProvider) {
     controller: 'AuthController',
     controllerAs: 'AuthCtrl',
     templateUrl: app + 'auth/login.tpl.html'
+  }).when('/player', {
+    controller: 'PlayerController',
+    controllerAs: 'PlayerCtrl',
+    templateUrl: app + 'player/player.tpl.html'
   });
 });

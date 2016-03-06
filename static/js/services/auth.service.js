@@ -25,7 +25,12 @@ function AuthService($cookies, $http) {
   }
 
   function isAuthenticated() {
-    return !!$cookies.session;
+    if($cookies.get('session')) {
+      return true;
+    } else {
+      return false;
+    }
+    //For some reason return !!cookies.get('session') didn't return proper data..
   }
 
   function login(username, password) {
@@ -36,7 +41,7 @@ function AuthService($cookies, $http) {
 
     function loginSuccessFn(data, status, headers, config) {
       AuthService.setAuthenticatedAccount(data.config.data);
-    //  window.location = '/';
+      window.location = '/';
     }
 
     function loginErrorFn(data, status, headers, config) {
@@ -45,16 +50,21 @@ function AuthService($cookies, $http) {
   }
 
   function logout() {
-    return $http.post('/api-auth/logout/')
-      .then(logoutSuccessFn, logoutErrorFn);
+    if(AuthService.isAuthenticated()) {
+      return $http.post('/api-auth/logout/')
+        .then(logoutSuccessFn, logoutErrorFn);
+      } else {
+        alert('Can\'t logout when you\'re not even logged in, silly goose.');
+      }
 
       function logoutSuccessFn(data, status, headers, config) {
         AuthService.unauthenticate();
+        alert('You\'ve been logged out.');
         window.location = '/';
       }
 
       function logoutErrorFn(data, status, headers, config) {
-        alert("Logout error.");
+        alert("Ruh roh, raggy! Ran into an error whilst trying to log you out!.");
       }
   }
 
@@ -92,6 +102,7 @@ function AuthService($cookies, $http) {
   }
 
   function unauthenticate() {
-    delete $cookies.session;
+    $cookies.remove('session');
+    $cookies.remove('name');
   }
 }

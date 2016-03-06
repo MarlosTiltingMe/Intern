@@ -9,6 +9,13 @@ function AuthController($scope, $cookies, AuthService) {
   $scope.login = function(username, password) {
     AuthService.login(username, password);
   }
+  $scope.logout = function() {
+    AuthService.logout();
+  }
+  $scope.isAuthenticated = function() {
+    return AuthService.isAuthenticated();
+  }
+
   AuthService.checkAuth('carter').success(function(data) {
     var data = data[0];
     $scope.user = data.username;

@@ -7,13 +7,12 @@
 </head>
 <body ng-controller="AuthController as auth">
   {%verbatim%}
-  {{auth.checkAuth('carter')}}
   <div id="nav" class="nav navbar-inverse">
-    <a class="navbar-brand" href="/board">Marlo</a>
-      <ul class="nav navbar-nav navbar-left">
-        <li><a href="/board/members/"></a></li>
-          <li><a href="">{{user}}</a></li>
-          <li><a href="/logout">Logout</a></li>
+    <a class="navbar-brand" href="/">Marlo</a>
+      <ul class="nav navbar-nav navbar-left" ng-switch="isAuthenticated()">
+        <li ng-switch-when=true><a href="">{{user}}</a></li>
+        <li ng-switch-when=true ng-click="logout()"><a href="/">Logout</a></li>
+        <li ng-switch-when=false><a href="/login">Login</a></li>
     </ul>
 </div>
   <ng-view>

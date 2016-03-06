@@ -10,6 +10,7 @@ from intern.views import IndexView
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'threads', views.ThreadViewSet)
+router.register(r'songs', views.SongViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,5 +32,11 @@ urlpatterns = [
     url(r'api-token-auth/', obtain_auth_token),
     url(r'api/user/(?P<username>.+)/$',
         UserByName.as_view()),
+    url(r'^api/songs/$',
+        views.SongList.as_view(),
+        name='song-list'),
+    url(r'^api/song/(?P<song>.+)/$',
+        views.SongByName.as_view(),
+        name='song-detail'),
     url(r'^.*$', IndexView.as_view(), name='index'),
 ]

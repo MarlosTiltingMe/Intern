@@ -1,0 +1,14 @@
+<div class="container" ng-controller="PlayerController">
+  <h3>Total Songs Queued:{{songAmount}}</h3>
+  <div id="player">
+    <div id="player"></div>
+  </div>
+  <input type="text" name="song" ng-model="song">
+  <button style="border:1px solid white; background-color:black;" ng-click="create(song)">Request</button>
+  <div id="playlist">
+    <ol id="queued" ng-show="pList">
+      <li ng-repeat="video in queueList">
+      </li>
+    </ol>
+  </div>
+</div>
