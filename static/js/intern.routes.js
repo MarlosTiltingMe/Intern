@@ -3,9 +3,9 @@ Intern.config(function($routeProvider) {
 
   $routeProvider
   .when('/', {
-    controller: 'HomeController',
-    controllerAs: 'HomeCtrl',
-    templateUrl: app + 'home/home.tpl.html'
+    controller: 'PlayerController',
+    controllerAs: 'PlayerCtrl',
+    templateUrl: app + 'player/player.tpl.html'
   }).when('/auth', {
     controller: 'AuthController',
     controllerAs: 'AuthCtrl',

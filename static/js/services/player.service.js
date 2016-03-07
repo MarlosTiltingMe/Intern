@@ -22,34 +22,35 @@ function PlayerService($window, $rootScope, SongService) {
       songAmount: null
     };
 
-    function getSong() {
-      return SongService.list().then(listSuccess, listErr);
-
-      function listSuccess(data, status, headers, config) {
-        var newSong = data.data[0].song;
-        tube.songAmount = data.data.length;
+    function getSong(callback) {
+      return SongService.list().success(function(response) {
+        var newSong = response[0].song;
+        tube.songAmount = response.length;
         tube.id = newSong;
+        if(callback) {
+          callback();
+        }
         console.log(tube.id);
         return newSong;
-      }
-
-      function listErr(data, status, headers, config) {
-        //This should never happen
-      }
+      });
     }
 
     function deletePlayed() {
       return SongService.destroy(tube.id);
     }
     $window.onYouTubeIframeAPIReady = function() {
+      loadPlayer = function() {
+        console.log('testing');
         tube.ready = true;
         service.bind('player');
         service.load();
         $rootScope.$apply();
+      }
+      getSong(loadPlayer());
     }
 
     function onTubeReady(event) {
-      tube.player.cueVideoById('ktoaj1IpTbw');
+      tube.player.cueVideoById(tube.id);
       tube.player.playVideo();
       tube.id = getSong();
     }
@@ -61,8 +62,8 @@ function PlayerService($window, $rootScope, SongService) {
             tube.state = 'paused';
         } else if (event.data == YT.PlayerState.ENDED) {
             tube.state = 'ended';
-            deletePlayed();
             getSong();
+            deletePlayed();
             service.launch(tube.id);
         }
         $rootScope.$apply();

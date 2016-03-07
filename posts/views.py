@@ -65,11 +65,10 @@ class SongByName(generics.ListCreateAPIView):
         return Songs.objects.filter(song=song)
 
 class SongViewSet(viewsets.ModelViewSet):
-    queryset = Songs.objects.all().order_by('owner')
+    queryset = Songs.objects.all().order_by('created')
     serializer_class = SongSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
         return super(SongViewSet, self).perform_create(serializer)
 
 class SongList(generics.ListCreateAPIView):
@@ -80,9 +79,6 @@ class SongList(generics.ListCreateAPIView):
     serializer_class = SongSerializer
 
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
 @api_view(('GET',))
 def api_root(request, format=None):

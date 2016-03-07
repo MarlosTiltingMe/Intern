@@ -12,10 +12,7 @@ class UserAccountManager(BaseUserManager):
 			raise ValueError('Users must have a valid email address.')
 		if not username:
 			raise ValueError('Users must have a valid username')
-		user = self.model(
-			email=email,
-			username=username,
-		)
+		user = User.objects.create(email=email, username=username)
 		user.set_password(password)
 		user.save()
 		return user

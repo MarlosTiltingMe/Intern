@@ -41,7 +41,7 @@ function AuthService($cookies, $http) {
 
     function loginSuccessFn(data, status, headers, config) {
       AuthService.setAuthenticatedAccount(data.config.data);
-      window.location = '/';
+      //window.location = '/';
     }
 
     function loginErrorFn(data, status, headers, config) {
@@ -60,7 +60,7 @@ function AuthService($cookies, $http) {
       function logoutSuccessFn(data, status, headers, config) {
         AuthService.unauthenticate();
         alert('You\'ve been logged out.');
-        window.location = '/';
+        //window.location = '/';
       }
 
       function logoutErrorFn(data, status, headers, config) {
@@ -77,7 +77,7 @@ function AuthService($cookies, $http) {
 
     function registerSuccessFn(data, status, headers, config) {
       AuthService.login(username, password);
-      window.location = '/';
+      //window.location = '/';
     }
 
     function registerErrorFn(data, status, headers, config) {
@@ -86,19 +86,10 @@ function AuthService($cookies, $http) {
   }
 
   function setAuthenticatedAccount(account) {
-    return $http.post('/api-token-auth/', {
-      username: account.username,
-      password: account.password
-    }).then(authSuccessFn, authErrorFn);
-
-    function authSuccessFn(data, status, headers, config) {
-      $cookies.put('session', data.data.token);
+    return $http.get('/api/user/' + account.username + '/').success(function(data) {
+      $cookies.put('session', data[0].auth_token);
       $cookies.put('name', account.username);
-    }
-
-    function authErrorFn(data, status, headers, config) {
-      alert('There was an error retrieving your authentication token! Right info?');
-    }
+    });
   }
 
   function unauthenticate() {

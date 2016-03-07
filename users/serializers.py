@@ -6,6 +6,7 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     threads = serializers.HyperlinkedRelatedField(many=True, view_name='thread-detail', read_only=True)
+    auth_token = serializers.CharField(read_only=True)
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'email', 'threads', 'auth_token')
+        fields = ('url', 'id', 'username', 'email', 'threads', 'password', 'auth_token')

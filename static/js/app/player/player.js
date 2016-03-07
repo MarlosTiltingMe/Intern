@@ -23,7 +23,7 @@ function PlayerController($scope, $http, PlayerService, SongService) {
   }
 
   $scope.songAmount = PlayerService.songAmount();
-  
+
   function getList() {
     SongService.list().success(function(data) {
       return data;

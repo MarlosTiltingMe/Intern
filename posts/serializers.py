@@ -9,7 +9,6 @@ class ThreadSerializer(serializers.ModelSerializer):
         fields = ('url', 'created', 'id', 'title', 'body', 'image', 'owner')
 
 class SongSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Songs
-        fields = ('created', 'owner', 'song', 'id')
+        fields = ('created', 'song', 'id')
