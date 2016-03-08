@@ -27,26 +27,24 @@ function PlayerService($window, $http, $rootScope, SongService) {
     var graveyard = [];
 
     var songAmount = 0;
-    
+
     function getSongs(callback) {
       return SongService.list().success(function(response) {
-        for(var c = 0; c < 3; c++) { //ha
+        for(var c = 0; c < 1; c++) { //ha
           thanesIdea.splice(c, 0, response[c]);
         }
         if(callback)  callback();
       });
     }
 
-    function destroy(callback) {
-      SongService.destroy(thanesIdea).success(function() {
-        if(callback)  callback();
-      });
+    function destroy() {
+      SongService.destroy(thanesIdea, 1, reset);
     }
 
     function reset(callback) {
-      if(tube.current > 2) {
+      if(tube.current > 0) {
         tube.current = 0;
-        destroy()
+        destroy();
       } else {
         getSongs(replay);
       }
@@ -78,7 +76,7 @@ function PlayerService($window, $http, $rootScope, SongService) {
         if (event.data == YT.PlayerState.PLAYING) {
           tube.state = 'playing';
         } else if (event.data == YT.PlayerState.PAUSED) {
-            tube.state = 'paused';
+            tube.player.playVideo();
         } else if (event.data == YT.PlayerState.ENDED) {
             tube.state = 'ended';
             reset();
@@ -86,6 +84,9 @@ function PlayerService($window, $http, $rootScope, SongService) {
         $rootScope.$apply();
     }
 
+    function onTubeError(event) {
+      console.log(event.data);
+    }
     this.launch = function(id) {
         tube.player.loadVideoById(id);
         tube.id = id;
@@ -107,7 +108,8 @@ function PlayerService($window, $http, $rootScope, SongService) {
             },
             events: {
                 'onReady': onTubeReady,
-                'onStateChange': onTubeStateChange
+                'onStateChange': onTubeStateChange,
+                'onError': onTubeError
             }
         });
     };
@@ -134,5 +136,18 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
     this.getQueue = function() {
         return queued;
+    }
+
+    document.onkeydown = function(e) {
+      e = e || window.event;
+      switch(e.which || e.keyCode) {
+        case 40: //down
+        tube.player.mute();
+        break;
+
+        case 38: //up
+        tube.player.unMute();
+        break;
+      }
     }
 }

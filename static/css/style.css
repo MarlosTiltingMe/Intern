@@ -15,3 +15,6 @@ body {
 .container input, button {
   margin:5px;
 }
+input{
+    color: black !important;
+}

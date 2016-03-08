@@ -18,17 +18,24 @@ function PlayerController($scope, $http, PlayerService, SongService) {
     PlayerService.queue(id);
   };
 
-  $scope.create = function(song) {
-    SongService.create({song:song});
+
+  $scope.postWhenNone = function() {
+    if(YT.PlayerState.ENDED) {
+      console.log('test');
+      reset();
+    }
   }
 
-  function getArchives() {
-    return $http.get('/api/Archives/');
-  }
-  $scope.history = function() {
-    getArchives().success(function(data) {
-      //console.log(data);
-    });
+  $scope.create = function(song) {
+    SongService.create({song:song}).then(a, b);
+
+    function a(data, status, headers, confg) {
+      $scope.postWhenNone();
+    }
+
+    function b(data, status, headers, config) {
+      console.log(data);
+    }
   }
 
   function getList() {
