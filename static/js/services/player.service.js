@@ -26,6 +26,8 @@ function PlayerService($window, $http, $rootScope, SongService) {
     var thanesIdea = [];
     var graveyard = [];
 
+    var songAmount = 0;
+    
     function getSongs(callback) {
       return SongService.list().success(function(response) {
         for(var c = 0; c < 3; c++) { //ha
@@ -94,15 +96,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
         tube.playerId = elementId;
     };
 
-    this.delete = function (list, id) {
-      for (var i = list.length - 1; i >= 0; i--) {
-        if (list[i].id === id) {
-          list.splice(i, 1);
-          break;
-        }
-      }
-    };
-
     this.spawnPlayer = function() {
         return new YT.Player(tube.playerId, {
             height: tube.height,
@@ -135,9 +128,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
         return queued;
     }
 
-    this.songAmount = function() {
-      return tube.songAmount;
-    }
     this.getTube = function() {
         return tube;
     }

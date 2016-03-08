@@ -5,8 +5,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
-    threads = serializers.HyperlinkedRelatedField(many=True, view_name='thread-detail', read_only=True)
     auth_token = serializers.CharField(read_only=True)
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'email', 'threads', 'password', 'auth_token')
+        fields = ('url', 'id', 'username', 'email', 'password', 'auth_token')

@@ -22,7 +22,14 @@ function PlayerController($scope, $http, PlayerService, SongService) {
     SongService.create({song:song});
   }
 
-  $scope.songAmount = PlayerService.songAmount();
+  function getArchives() {
+    return $http.get('/api/Archives/');
+  }
+  $scope.history = function() {
+    getArchives().success(function(data) {
+      //console.log(data);
+    });
+  }
 
   function getList() {
     SongService.list().success(function(data) {

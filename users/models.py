@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
 from intern import settings
 from django.db import models
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
 class UserAccountManager(BaseUserManager):
 	def create_user(self, email, username, password):

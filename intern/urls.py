@@ -9,7 +9,7 @@ from intern.views import IndexView
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'threads', views.ThreadViewSet)
+router.register(r'Archives', views.ArchiveViewSet)
 router.register(r'songs', views.SongViewSet)
 
 urlpatterns = [
@@ -17,12 +17,12 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls',
                                 namespace='rest_framework')),
     url(r'^api/', include(router.urls)),
-    url(r'^api/threads/$',
-        views.ThreadList.as_view(),
-        name='thread-list'),
-    url(r'^api/threads/(?P<pk>[0-9]+)/$',
-        views.ThreadDetail.as_view(),
-        name='thread-detail'),
+    url(r'^api/Archives/$',
+        views.ArchiveList.as_view(),
+        name='Archive-list'),
+    url(r'^api/Archives/(?P<pk>[0-9]+)/$',
+        views.ArchiveDetail.as_view(),
+        name='Archive-detail'),
     url(r'^api/users/$',
         UserList.as_view(),
         name='user-list'),

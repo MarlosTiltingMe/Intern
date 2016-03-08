@@ -41,7 +41,7 @@ function AuthService($cookies, $http) {
 
     function loginSuccessFn(data, status, headers, config) {
       AuthService.setAuthenticatedAccount(data.config.data);
-      //window.location = '/';
+      window.location = '/';
     }
 
     function loginErrorFn(data, status, headers, config) {
@@ -60,7 +60,7 @@ function AuthService($cookies, $http) {
       function logoutSuccessFn(data, status, headers, config) {
         AuthService.unauthenticate();
         alert('You\'ve been logged out.');
-        //window.location = '/';
+        window.location = '/';
       }
 
       function logoutErrorFn(data, status, headers, config) {
@@ -77,7 +77,7 @@ function AuthService($cookies, $http) {
 
     function registerSuccessFn(data, status, headers, config) {
       AuthService.login(username, password);
-      //window.location = '/';
+      window.location = '/';
     }
 
     function registerErrorFn(data, status, headers, config) {

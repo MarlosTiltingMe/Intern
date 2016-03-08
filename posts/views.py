@@ -1,5 +1,5 @@
-from posts.models import Threads, Songs
-from posts.serializers import ThreadSerializer, SongSerializer
+from posts.models import Archive, Songs
+from posts.serializers import ArchiveSerializer, SongSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -8,43 +8,33 @@ from rest_framework.response import Response
 from rest_framework import status, mixins, generics, permissions, renderers, viewsets
 from django.contrib.auth.models import User
 from posts.permissions import IsOwnerOrReadOnly
+from django.contrib.auth.models import User
 
-class ThreadList(generics.ListCreateAPIView):
+class ArchiveList(generics.ListCreateAPIView):
     """
-    List all threads, homie
+    List all Archives, homie
     """
-    queryset = Threads.objects.all()
-    serializer_class = ThreadSerializer
+    queryset = Archive.objects.all()
+    serializer_class = ArchiveSerializer
 
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
-class ThreadDetail(generics.RetrieveUpdateDestroyAPIView):
+class ArchiveDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Get/Maniupulate a single thread.
+    Get/Maniupulate a single Archive.
     """
-    queryset = Threads.objects.all()
-    serializer_class = ThreadSerializer
+    queryset = Archive.objects.all()
+    serializer_class = ArchiveSerializer
 
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class Thread(generics.GenericAPIView):
-    queryset = Threads.objects.all()
-    renderer_classes = (renderers.StaticHTMLRenderer,)
-
-    def get(self, request, *args, **kwargs):
-        thread = self.get_object()
-        return Response(thread)
-
-class ThreadViewSet(viewsets.ModelViewSet):
-    queryset = Threads.objects.all().order_by('-created')
-    serializer_class = ThreadSerializer
+class ArchiveViewSet(viewsets.ModelViewSet):
+    queryset = Archive.objects.all().order_by('-created')
+    serializer_class = ArchiveSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-        return super(ThreadViewSet, self).perform_create(serializer)
+        return super(ArchiveViewSet, self).perform_create(serializer)
 
 class Song(generics.GenericAPIView):
     queryset = Songs.objects.all()
@@ -84,6 +74,6 @@ class SongList(generics.ListCreateAPIView):
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'posts': reverse('thread-list', request=request, format=format),
+        'archive': reverse('archive-list', request=request, format=format),
         'songs': reverse('song-list', request=request, format=format)
     })
