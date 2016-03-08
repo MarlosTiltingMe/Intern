@@ -19,13 +19,16 @@ function SongService($http) {
     return $http.put('/api/songs/' + id + '/', post);
   }
 
-  function destroy(song) {
-    var request = $http.get('/api/song/' + song + '/').then(a, b);
-    function a(data, status, headers, config) {
-      return $http.delete('/api/songs/' + data.data[0].id + '/')
-    }
-    function b(data, status, headers, config) {
-      console.log(data);
+  function destroy(songs) {
+    for(var i = 0; i < 3; i++) {
+      var request = $http.get('/api/song/' + songs[i].song + '/').then(a, b);
+      function a(data, status, headers, config) {
+        console.log(data);
+        return $http.delete('/api/songs/' + data.data[0].id + '/')
+      }
+      function b(data, status, headers, config) {
+        console.log(data);
+      }
     }
   }
 

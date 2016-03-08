@@ -4,7 +4,7 @@ Intern.config( function ($httpProvider) {
   delete $httpProvider.defaults.headers.common['X-Requested-With'];
 });
 
-function PlayerService($window, $rootScope, SongService) {
+function PlayerService($window, $http, $rootScope, SongService) {
 
     var service = this;
 
@@ -16,43 +16,60 @@ function PlayerService($window, $rootScope, SongService) {
       state: 'stopped',
       player: null,
       videoId: null,
-      id: null,
+      id: 'Aae_RHRptRg',
       playerId: null,
       state: 'stopped',
-      songAmount: null
+      current: 0
     };
 
-    function getSong(callback) {
+
+    var thanesIdea = [];
+    var graveyard = [];
+
+    function getSongs(callback) {
       return SongService.list().success(function(response) {
-        var newSong = response[0].song;
-        tube.songAmount = response.length;
-        tube.id = newSong;
-        if(callback) {
-          callback();
+        for(var c = 0; c < 3; c++) { //ha
+          thanesIdea.splice(c, 0, response[c]);
         }
-        console.log(tube.id);
-        return newSong;
+        if(callback)  callback();
       });
     }
 
-    function deletePlayed() {
-      return SongService.destroy(tube.id);
+    function destroy(callback) {
+      SongService.destroy(thanesIdea).success(function() {
+        if(callback)  callback();
+      });
     }
-    $window.onYouTubeIframeAPIReady = function() {
-      loadPlayer = function() {
-        console.log('testing');
-        tube.ready = true;
-        service.bind('player');
-        service.load();
-        $rootScope.$apply();
+
+    function reset(callback) {
+      if(tube.current > 2) {
+        tube.current = 0;
+        destroy()
+      } else {
+        getSongs(replay);
       }
-      getSong(loadPlayer());
+    }
+
+    $window.onYouTubeIframeAPIReady = function() {
+      tube.ready = true;
+      service.bind('player');
+      service.load();
+      $rootScope.$apply();
+    }
+
+    function replay() {
+      service.launch(thanesIdea[tube.current].song);
+      tube.current = tube.current + 1;
     }
 
     function onTubeReady(event) {
-      tube.player.cueVideoById(tube.id);
-      tube.player.playVideo();
-      tube.id = getSong();
+      getSongs(ready);
+      function ready() {
+        tube.player.cueVideoById(thanesIdea[tube.current].song);
+        tube.player.playVideo();
+        //tube.current = tube.current + 1;
+        getSongs(replay);
+      }
     }
 
     function onTubeStateChange(event) {
@@ -62,9 +79,7 @@ function PlayerService($window, $rootScope, SongService) {
             tube.state = 'paused';
         } else if (event.data == YT.PlayerState.ENDED) {
             tube.state = 'ended';
-            getSong();
-            deletePlayed();
-            service.launch(tube.id);
+            reset();
         }
         $rootScope.$apply();
     }
