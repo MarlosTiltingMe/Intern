@@ -6,7 +6,7 @@
     <div id="player"></div>
   </div>
   <input type="text" name="song" ng-model="song">
-  <button class="req" ng-click="create(song)">Request</button>
+  <button ng-click="create(song)">Request</button>
   <div class="panel panel-default">
     <div class="panel-heading">History</div>
     <table class=table>
@@ -14,12 +14,14 @@
            <tr>
                <th>ID</th>
                <th>When</th>
+               <th>Who</th>
            </tr>
        </thead>
        <tbody>
          <tr ng-repeat="archive in archiveList">
            <td><a href="http://youtube.com/watch?v={{archive.song}}">{{archive.song}}</a></td>
            <td>{{archive.created | date}}</td>
+           <td>{{archive.requester}}</td>
          </tr>
        </tbody>
      </table>

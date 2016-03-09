@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, generics, views, status
 from rest_framework.response import Response
 from users.serializers import UserSerializer
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 User = get_user_model()
 
@@ -57,3 +57,10 @@ class LoginView(views.APIView):
                 'status': 'Unathorized',
                 'message': 'Lazy error message.'
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+class LogoutView(views.APIView):
+
+    def post(self, request, format=None):
+        logout(request)
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)

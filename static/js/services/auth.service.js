@@ -42,14 +42,13 @@ function AuthService($cookies, $http) {
     }
 
     function loginErrorFn(data, status, headers, config) {
-      alert('Error logging you in');
-      console.log(data.data);
+      window.location = '/login';
     }
   }
 
   function logout() {
     if(AuthService.isAuthenticated()) {
-      return $http.post('/api-auth/logout/')
+      return $http.post('/api/auth/logout/')
         .then(logoutSuccessFn, logoutErrorFn);
       } else {
         alert('Can\'t logout when you\'re not even logged in, silly goose.');
@@ -75,7 +74,7 @@ function AuthService($cookies, $http) {
 
     function registerSuccessFn(data, status, headers, config) {
       AuthService.login(username, password);
-      window.location = '/';
+      window.location = '/login';
     }
 
     function registerErrorFn(data, status, headers, config) {
@@ -90,7 +89,6 @@ function AuthService($cookies, $http) {
   }
 
   function unauthenticate() {
-    $cookies.remove('session');
-    $cookies.remove('name');
+    $cookies.remove('authenticated');
   }
 }

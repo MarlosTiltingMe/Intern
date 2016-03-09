@@ -30,16 +30,24 @@ function PlayerService($window, $http, $rootScope, SongService) {
     **/
     function getSongs(callback) {
       return SongService.list().success(function(response) {
-        for(var c = 0; c < tube.entries; c++) { //ha
-          thanesIdea.splice(c, 0, response[c]);
+        if(response.length > 0) {
+          console.log('getSongs fetched a song.');
+          for(var c = 0; c < tube.entries; c++) { //ha
+            thanesIdea.splice(c, 0, response[c]);
+          }
+          tube.player.cueVideoById(thanesIdea[tube.current].song);
+          tube.player.playVideo();
         }
         if(callback)  callback();
       });
     }
 
     //Destroys each object in the array's REST object, then calls reset();.
-    function destroy() {
-      SongService.destroy(thanesIdea, tube.entries, reset);
+    function destroy(callback) {
+      console.log('destroy got called');
+      if(thanesIdea.length > 0) {
+        SongService.destroy(thanesIdea, tube.entries, reset);
+      }
     }
 
     //Checks current song position. If it's > tube.entries.
@@ -47,9 +55,13 @@ function PlayerService($window, $http, $rootScope, SongService) {
     //Queue up more songs and callback to replay();
     function reset(callback) {
       if(tube.current > tube.entries) {
+        console.log('set to 0');
         tube.current = 0;
-        destroy();
+        destroy(function() {
+          getSongs(replay);
+        });
       } else {
+        console.log('got songs, tube current no set');
         getSongs(replay);
       }
     }
@@ -64,19 +76,44 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
     //Launchs a new song and counts current pos up.
     function replay() {
-      service.launch(thanesIdea[tube.current].song);
-      tube.current = tube.current + 1;
+      if(thanesIdea[tube.current]) {
+        service.launch(thanesIdea[tube.current].song);
+        tube.current = tube.current + 1;
+      } else {
+        playArchived();
+      }
     }
 
     //Event bus
     function onTubeReady(event) {
       getSongs(ready);
       function ready() {
-        tube.player.cueVideoById(thanesIdea[tube.current].song);
-        tube.player.playVideo();
-        checkQueue(getSongs);
+        if(thanesIdea[tube.current]) {
+          console.log('exists');
+          tube.player.cueVideoById(thanesIdea[tube.current].song);
+          tube.player.playVideo();
+          SongService.destroy(thanesIdea, 1, function(data){
+            thanesIdea = [];
+          });
+        }else {
+          console.log('a');
+          playArchived();
+        }
       }
     }
+
+    //Does exactly what it says, man.
+    function playArchived() {
+      return SongService.archiveList().success(function(data) {
+        //alert('Playing an archived song. Want to request a song? Go for it! It will' +
+        //'play next.');
+        thanesIdea.splice(0, 0, data[Math.floor(Math.random() * data.length - 1) + 1]);
+        service.launch(thanesIdea[0].song);
+        tube.current = tube.current + 1;
+        tube.player.playVideo();
+      });
+    }
+
 
     /**
     Grabs Song list. If there's more than data.entries
@@ -92,14 +129,7 @@ function PlayerService($window, $http, $rootScope, SongService) {
         if(data.length > data.entries + 1) {
           if(callback)  callback();
         } else {
-          SongService.destroy(thanesIdea, 1, playArchived);
-          function playArchived() {
-            return SongService.archiveList().success(function(data) {
-              thanesIdea.splice(0, 0, data[Math.floor(Math.random() * data.length - 1) + 1]);
-              service.launch(thanesIdea[0].song);
-              tube.current = tube.current + 1;
-            });
-          }
+          destroy();
         }
       });
     }
@@ -113,14 +143,36 @@ function PlayerService($window, $http, $rootScope, SongService) {
             tube.player.playVideo();
         } else if (event.data == YT.PlayerState.ENDED) {
             tube.state = 'ended';
-            checkQueue(reset);
-        }
+            getSongs(function() {
+              if(thanesIdea[tube.current]) {
+                console.log('exists');
+                tube.player.cueVideoById(thanesIdea[tube.current].song);
+                tube.player.playVideo();
+                reset();
+              }else {
+                console.log('Playing Archived');
+                playArchived();
+              }
+          });
         $rootScope.$apply();
     }
+  }
 
     //Resets if an error occurs.
     function onTubeError(event) {
-      checkQueue(reset);
+      if(thanesIdea[tube.current]) {
+        checkQueue(function() {
+          getSongs(function() {
+            console.log('exists');
+            tube.player.cueVideoById(thanesIdea[tube.current].song);
+            tube.player.playVideo();
+            tube.current = tube.current + 1;
+          });
+        });
+      }else {
+        console.log('Playing Archived');
+        playArchived();
+      }
     }
 
     //launches player with given song id.
@@ -179,11 +231,11 @@ function PlayerService($window, $http, $rootScope, SongService) {
     document.onkeydown = function(e) {
       e = e || window.event;
       switch(e.which || e.keyCode) {
-        case 40: //down
+        case 39: //down
         tube.player.mute();
         break;
 
-        case 38: //up
+        case 37: //up
         tube.player.unMute();
         break;
       }

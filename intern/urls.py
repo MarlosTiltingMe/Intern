@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.urlpatterns import format_suffix_patterns
-from users.views import AccountViewSet, UserDetail, UserByName, LoginView
+from users.views import AccountViewSet, UserDetail, UserByName, LoginView, LogoutView
 from posts import views
 from django.contrib import admin
 from intern.views import IndexView
@@ -25,6 +25,7 @@ urlpatterns = [
         UserDetail.as_view(),
         name='user-detail'),
     url(r'^api/auth/login/$', LoginView.as_view(), name='login'),
+    url(r'^api/auth/logout/$', LogoutView.as_view(), name='logout'),
     url(r'api/user/(?P<username>.+)/$',
         UserByName.as_view()),
     url(r'^api/songs/$',

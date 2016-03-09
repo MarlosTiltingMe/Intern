@@ -2,11 +2,13 @@ from __future__ import unicode_literals
 
 from django.db import models
 from intern import settings
-
+from users.models import UserAccount
 
 class Archive(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     song = models.CharField(max_length=72, unique=False)
+    upvotes = models.IntegerField(default=1)
+    requester = models.ForeignKey(UserAccount, related_name='user')
 
     def save(self, *args, **kwargs):
         options = self.song and {'song': self.song} or {}

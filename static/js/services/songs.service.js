@@ -1,7 +1,7 @@
 Intern.factory('SongService', SongService);
 
 
-function SongService($http) {
+function SongService($http, AuthService) {
 
   function create(post) {
     return $http.post('/api/songs/', post);
@@ -25,6 +25,7 @@ function SongService($http) {
 
   function archive(post) {
     return $http.post('/api/Archives/', post);
+    console.log(data);
   }
 
 
@@ -48,9 +49,13 @@ function SongService($http) {
   function destroy(songs, amount, callback) {
     for(var i = 0; i < amount; i++) {
       if(songs.length > 0) {
-        archive(songs[i]);
+        var user = AuthService.getAuthenticatedAccount().username;
+        archive({song:songs[i].song, upvotes:1, requester:user});
       }
-      var request = $http.get('/api/song/' + songs[i].song + '/').then(a, b);
+      if(songs.length > 0) {
+        console.log(songs);
+        var request = $http.get('/api/song/' + songs[i].song + '/').then(a, b);
+      }
 
       function a(data, status, headers, config) {
 
