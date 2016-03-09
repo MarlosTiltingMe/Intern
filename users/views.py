@@ -8,14 +8,6 @@ from django.contrib.auth import authenticate, login
 
 User = get_user_model()
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('-created_at')
-    serializer_class = UserSerializer
-
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -63,5 +55,5 @@ class LoginView(views.APIView):
         else:
             return Response({
                 'status': 'Unathorized',
-                'message': 'Disabled.'
+                'message': 'Lazy error message.'
             }, status=status.HTTP_401_UNAUTHORIZED)

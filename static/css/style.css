@@ -18,11 +18,11 @@ body {
 input{
     color: black !important;
 }
-button {
+.req button {
   border: solid 1px white !important;
   background-color:black !important;
 }
-button:hover {
+.req button:hover {
   background-color:#cc0000 !important;
 }
 .panel-heading {

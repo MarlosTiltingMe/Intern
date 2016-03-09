@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.urlpatterns import format_suffix_patterns
-from users.views import AccountViewSet, UserList, UserDetail, UserByName, LoginView
+from users.views import AccountViewSet, UserDetail, UserByName, LoginView
 from posts import views
 from django.contrib import admin
 from intern.views import IndexView
@@ -14,8 +14,6 @@ router.register(r'songs', views.SongViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls',
-                                namespace='rest_framework')),
     url(r'^api/', include(router.urls)),
     url(r'^api/Archives/$',
         views.ArchiveList.as_view(),
@@ -26,10 +24,7 @@ urlpatterns = [
     url(r'^api/users/(?P<pk>[0-9]+)/$',
         UserDetail.as_view(),
         name='user-detail'),
-    url(r'api-token-auth/', obtain_auth_token),
-
     url(r'^api/auth/login/$', LoginView.as_view(), name='login'),
-
     url(r'api/user/(?P<username>.+)/$',
         UserByName.as_view()),
     url(r'^api/songs/$',

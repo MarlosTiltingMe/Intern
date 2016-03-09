@@ -3,10 +3,9 @@ Intern.factory('SongService', SongService);
 
 function SongService($http) {
 
-  function create(post, callback) {
+  function create(post) {
     return $http.post('/api/songs/', post);
   }
-
 
   function list() {
     return $http.get('/api/songs/');
@@ -28,9 +27,29 @@ function SongService($http) {
     return $http.post('/api/Archives/', post);
   }
 
+
+  /**
+  The mother of all functions. This terrible looking thing handles
+  most of the erroneous states that the player might run into.
+
+  a(); is being called if/when request is successful, if not, call b();.
+
+  Then I check the length of data.data to make sure there's a song to delete
+  before I actually delete it. If there isn't, callback(normally PlayerService.reset()).
+
+  c(); is checking i & amount to make sure the callback doesn't happen before it should.
+
+  d(); is just calling back regardless. If d is ever called, it means that the check
+  on line 52 didn't work for some reason. Or that the delete request failed.
+  At any rate, it just calls back in hopes that the error will fix itself, because
+  at that point, without me being at the terminal to check what's happening, that's
+  the best option.
+   **/
   function destroy(songs, amount, callback) {
     for(var i = 0; i < amount; i++) {
-      archive(songs[i]);
+      if(songs.length > 0) {
+        archive(songs[i]);
+      }
       var request = $http.get('/api/song/' + songs[i].song + '/').then(a, b);
 
       function a(data, status, headers, config) {
