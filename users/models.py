@@ -6,7 +6,6 @@ from rest_framework.authtoken.models import Token
 from intern import settings
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 
 class UserAccountManager(BaseUserManager):
 	def create_user(self, email, username, password):
@@ -14,15 +13,21 @@ class UserAccountManager(BaseUserManager):
 			raise ValueError('Users must have a valid email address.')
 		if not username:
 			raise ValueError('Users must have a valid username')
-		user = User.objects.create(email=email, username=username)
+
+		user = self.model(
+			email=self.normalize_email(email), username=username
+		)
+
 		user.set_password(password)
 		user.save()
 		return user
 
 	def create_superuser(self, email, username, password):
 		user = self.create_user(email, username, password)
+
 		user.is_admin = True
 		user.save()
+
 		return user
 
 class UserAccount(AbstractBaseUser):
@@ -30,6 +35,9 @@ class UserAccount(AbstractBaseUser):
     username = models.CharField(max_length=16, unique=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     is_admin = models.BooleanField(default=False)
+	
+    objects = UserAccountManager()
+
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 

@@ -5,7 +5,22 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
-    auth_token = serializers.CharField(read_only=True)
+    password = serializers.CharField(write_only=True, required=False)
+
     class Meta:
-        model = User
-        fields = ('url', 'id', 'username', 'email', 'password', 'auth_token')
+        model = UserAccount
+
+        def create(self, validated_data):
+            return UserAccount.objects.create(**validated_data)
+
+        def update(self, instance, validated_data):
+            instance.username = validated_data.get('username', instance.username)
+            instance.tagline = validated_data.get('tagline', instance.tagline)
+
+            instance.save()
+
+            password = validated_data.get('password', None)
+
+            update_session_auth_hash(self.context.get('request'), instance)
+
+            return instance

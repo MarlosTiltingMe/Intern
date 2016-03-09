@@ -17,6 +17,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+SITE_ID = 1
+
 AUTH_USER_MODEL = 'users.UserAccount'
 
 REST_FRAMEWORK = {
@@ -35,6 +37,7 @@ REST_FRAMEWORK = {
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',

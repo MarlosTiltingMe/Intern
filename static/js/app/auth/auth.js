@@ -16,9 +16,6 @@ function AuthController($scope, $cookies, AuthService) {
     return AuthService.isAuthenticated();
   }
 
-  AuthService.checkAuth($cookies.get('name')).success(function(data) {
-    var data = data[0];
-    $scope.user = data.username;
-    $scope.threads = data.threads;
-  });
+  $scope.userModel = AuthService.getAuthenticatedAccount();
+
 }

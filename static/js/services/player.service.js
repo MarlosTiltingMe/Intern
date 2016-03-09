@@ -11,12 +11,12 @@ function PlayerService($window, $http, $rootScope, SongService) {
     var tube = {
       autoplay: 1,
       ready: false,
-      height: '720',
-      width: '1280',
+      height: '360',
+      width: '100%',
       state: 'stopped',
       player: null,
       videoId: null,
-      id: 'Aae_RHRptRg',
+      id: '',
       playerId: null,
       state: 'stopped',
       current: 0
@@ -72,6 +72,23 @@ function PlayerService($window, $http, $rootScope, SongService) {
       }
     }
 
+    function checkQueue(callback) {
+      SongService.list().success(function(data) {
+        if(data.length > 1) {
+          if(callback)  callback();
+        } else {
+          SongService.destroy(thanesIdea, 1, playArchived);
+          function playArchived() {
+            return SongService.archiveList().success(function(data) {
+              thanesIdea.splice(0, 0, data[Math.floor(Math.random() * data.length - 1) + 1]);
+              service.launch(thanesIdea[0].song);
+              tube.current = tube.current + 1;
+            });
+          }
+        }
+      });
+    }
+
     function onTubeStateChange(event) {
         if (event.data == YT.PlayerState.PLAYING) {
           tube.state = 'playing';
@@ -79,14 +96,15 @@ function PlayerService($window, $http, $rootScope, SongService) {
             tube.player.playVideo();
         } else if (event.data == YT.PlayerState.ENDED) {
             tube.state = 'ended';
-            reset();
+            checkQueue(reset);
         }
         $rootScope.$apply();
     }
 
     function onTubeError(event) {
-      console.log(event.data);
+      reset();
     }
+
     this.launch = function(id) {
         tube.player.loadVideoById(id);
         tube.id = id;
@@ -132,10 +150,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
     this.getTube = function() {
         return tube;
-    }
-
-    this.getQueue = function() {
-        return queued;
     }
 
     document.onkeydown = function(e) {

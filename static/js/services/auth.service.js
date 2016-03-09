@@ -3,29 +3,26 @@ AuthService.$inject = ['$cookies', '$http'];
 
 function AuthService($cookies, $http) {
   var AuthService = {
-    checkAuth: checkAuth,
     isAuthenticated: isAuthenticated,
     login: login,
     logout: logout,
     register: register,
     setAuthenticatedAccount: setAuthenticatedAccount,
+    getAuthenticatedAccount: getAuthenticatedAccount,
     unauthenticate: unauthenticate
   };
 
   return AuthService;
 
-  function checkAuth(username) {
-    return $http.get('/api/user/' + username + '/').success(function(data) {
-      return data;
-    })
-    .error(function(err) {
-      console.log(err)
-      return err;
-    });
+  function getAuthenticatedAccount() {
+    if(!$cookies.get('authenticated')) {
+      return;
+    }
+    return JSON.parse($cookies.get('authenticated'));
   }
 
   function isAuthenticated() {
-    if($cookies.get('session')) {
+    if($cookies.get('authenticated')) {
       return true;
     } else {
       return false;
@@ -34,18 +31,19 @@ function AuthService($cookies, $http) {
   }
 
   function login(username, password) {
-    return $http.post('/api-auth/login/', {
+    return $http.post('/api/auth/login/', {
       username: username,
       password: password
     }).then(loginSuccessFn, loginErrorFn);
 
     function loginSuccessFn(data, status, headers, config) {
-      AuthService.setAuthenticatedAccount(data.config.data);
+      AuthService.setAuthenticatedAccount(data.data);
       window.location = '/';
     }
 
     function loginErrorFn(data, status, headers, config) {
       alert('Error logging you in');
+      console.log(data.data);
     }
   }
 
@@ -87,8 +85,7 @@ function AuthService($cookies, $http) {
 
   function setAuthenticatedAccount(account) {
     return $http.get('/api/user/' + account.username + '/').success(function(data) {
-      $cookies.put('session', data[0].auth_token);
-      $cookies.put('name', account.username);
+      $cookies.put('authenticated', JSON.stringify(account));
     });
   }
 

@@ -1,16 +1,27 @@
-<div class="container" ng-controller="PlayerController">
-  <div class="alert alert-info" role="alert" style="width:100%;">In order to keep the player as synced as possible
+<div class="container" ng-controller="PlayerController" ng-init="init()">
+  <div class="alert alert-danger" role="alert" style="width:100%;">In order to keep the player as synced as possible
   across clients, I've disabled pausing of the player. To mute the player quickly, press the DOWN arrow.
   In contrary, the UP arrow key will un-mute the player's audio.</div>
   <div id="player">
     <div id="player"></div>
   </div>
   <input type="text" name="song" ng-model="song">
-  <button style="border:1px solid white; background-color:black;" ng-click="create(song)">Request</button>
-  <div id="playlist">
-    <ol id="queued" ng-show="pList">
-      <li ng-repeat="video in queueList">
-      </li>
-    </ol>
+  <button class="req" ng-click="create(song, postWhenNone)">Request</button>
+  <div class="panel panel-default">
+    <div class="panel-heading">History</div>
+    <table class=table>
+       <thead>
+           <tr>
+               <th>ID</th>
+               <th>When</th>
+           </tr>
+       </thead>
+       <tbody>
+         <tr ng-repeat="archive in archiveList">
+           <td><a href="http://youtube.com/watch?v={{archive.song}}">{{archive.song}}</a></td>
+           <td>{{archive.created | date}}</td>
+         </tr>
+       </tbody>
+     </table>
   </div>
 </div>

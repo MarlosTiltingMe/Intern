@@ -5,8 +5,13 @@ function PlayerController($scope, $http, PlayerService, SongService) {
 
   function start() {
     $scope.youtube = PlayerService.getTube();
-    $scope.queueList = PlayerService.getQueue();
     $scope.pList = true;
+  }
+
+  $scope.init = function() {
+    SongService.archiveList().success(function(data) {
+      $scope.archiveList = data;
+    });
   }
 
   $scope.launch = function(id) {
@@ -18,24 +23,8 @@ function PlayerController($scope, $http, PlayerService, SongService) {
     PlayerService.queue(id);
   };
 
-
-  $scope.postWhenNone = function() {
-    if(YT.PlayerState.ENDED) {
-      console.log('test');
-      reset();
-    }
-  }
-
   $scope.create = function(song) {
-    SongService.create({song:song}).then(a, b);
-
-    function a(data, status, headers, confg) {
-      $scope.postWhenNone();
-    }
-
-    function b(data, status, headers, config) {
-      console.log(data);
-    }
+    SongService.create({song:song});
   }
 
   function getList() {

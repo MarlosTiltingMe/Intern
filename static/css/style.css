@@ -10,11 +10,21 @@ body {
   margin-bottom:10px;
 }
 .container {
-  width:50%;
+  width:60% !important;
 }
 .container input, button {
   margin:5px;
 }
 input{
     color: black !important;
+}
+button {
+  border: solid 1px white !important;
+  background-color:black !important;
+}
+button:hover {
+  background-color:#cc0000 !important;
+}
+.panel-heading {
+  background-image: linear-gradient(tp bpttp,. #f5f5f5, #linear-gradient(to bottom,#B91D1D 0, #00ff00 100%) !important;
 }
