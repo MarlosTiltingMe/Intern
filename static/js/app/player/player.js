@@ -37,7 +37,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         $scope.hmap.set(key, data[c].id);
         $scope.hmap.set(key, data[c].username);
       }
-      console.log($scope.hmap);
     });
   }
 

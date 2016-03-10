@@ -25,7 +25,6 @@ function SongService($http, AuthService) {
 
   function archive(post) {
     return $http.post('/api/Archives/', post);
-    console.log(data);
   }
 
   /**
@@ -49,11 +48,11 @@ function SongService($http, AuthService) {
     for(var i = 0; i < amount; i++) {
       if(songs.length > 0) {
         var user = AuthService.getAuthenticatedAccount();
-        console.log(user);
-        archive({song:songs[i].song, upvotes:1, requester:user.id});
+        if(AuthService.isAuthenticated()) {
+          archive({song:songs[i].song, upvotes:1, requester:user.id});
+        }
       }
       if(songs.length > 0) {
-        console.log(songs);
         var request = $http.get('/api/song/' + songs[i].song + '/').then(a, b);
       }
 

@@ -31,7 +31,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
     function getSongs(callback) {
       return SongService.list().success(function(response) {
         if(response.length > 0) {
-          console.log('getSongs fetched a song.');
           for(var c = 0; c < tube.entries; c++) { //ha
             thanesIdea.splice(c, 0, response[c]);
           }
@@ -44,7 +43,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
     //Destroys each object in the array's REST object, then calls reset();.
     function destroy(callback) {
-      console.log('destroy got called');
       if(thanesIdea.length > 0) {
         SongService.destroy(thanesIdea, tube.entries, reset);
       }
@@ -55,13 +53,11 @@ function PlayerService($window, $http, $rootScope, SongService) {
     //Queue up more songs and callback to replay();
     function reset(callback) {
       if(tube.current > tube.entries) {
-        console.log('set to 0');
         tube.current = 0;
         destroy(function() {
           getSongs(replay);
         });
       } else {
-        console.log('got songs, tube current no set');
         getSongs(replay);
       }
     }
@@ -89,14 +85,12 @@ function PlayerService($window, $http, $rootScope, SongService) {
       getSongs(ready);
       function ready() {
         if(thanesIdea[tube.current]) {
-          console.log('exists');
           tube.player.cueVideoById(thanesIdea[tube.current].song);
           tube.player.playVideo();
           SongService.destroy(thanesIdea, 1, function(data){
             thanesIdea = [];
           });
         }else {
-          console.log('a');
           playArchived();
         }
       }
@@ -145,12 +139,10 @@ function PlayerService($window, $http, $rootScope, SongService) {
             tube.state = 'ended';
             getSongs(function() {
               if(thanesIdea[tube.current]) {
-                console.log('exists');
                 tube.player.cueVideoById(thanesIdea[tube.current].song);
                 tube.player.playVideo();
                 reset();
               }else {
-                console.log('Playing Archived');
                 playArchived();
               }
           });
@@ -163,14 +155,12 @@ function PlayerService($window, $http, $rootScope, SongService) {
       if(thanesIdea[tube.current]) {
         checkQueue(function() {
           getSongs(function() {
-            console.log('exists');
             tube.player.cueVideoById(thanesIdea[tube.current].song);
             tube.player.playVideo();
             tube.current = tube.current + 1;
           });
         });
       }else {
-        console.log('Playing Archived');
         playArchived();
       }
     }
