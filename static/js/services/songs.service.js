@@ -28,7 +28,6 @@ function SongService($http, AuthService) {
     console.log(data);
   }
 
-
   /**
   The mother of all functions. This terrible looking thing handles
   most of the erroneous states that the player might run into.
@@ -49,8 +48,9 @@ function SongService($http, AuthService) {
   function destroy(songs, amount, callback) {
     for(var i = 0; i < amount; i++) {
       if(songs.length > 0) {
-        var user = AuthService.getAuthenticatedAccount().username;
-        archive({song:songs[i].song, upvotes:1, requester:user});
+        var user = AuthService.getAuthenticatedAccount();
+        console.log(user);
+        archive({song:songs[i].song, upvotes:1, requester:user.id});
       }
       if(songs.length > 0) {
         console.log(songs);

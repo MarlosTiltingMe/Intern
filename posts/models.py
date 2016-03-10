@@ -8,7 +8,7 @@ class Archive(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     song = models.CharField(max_length=72, unique=False)
     upvotes = models.IntegerField(default=1)
-    requester = models.ForeignKey(UserAccount, related_name='user')
+    requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         options = self.song and {'song': self.song} or {}

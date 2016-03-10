@@ -21,7 +21,7 @@
          <tr ng-repeat="archive in archiveList">
            <td><a href="http://youtube.com/watch?v={{archive.song}}">{{archive.song}}</a></td>
            <td>{{archive.created | date}}</td>
-           <td>{{archive.requester}}</td>
+           <td>{{map(archive.requester)}}</td>
          </tr>
        </tbody>
      </table>

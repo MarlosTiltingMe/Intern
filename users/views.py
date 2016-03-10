@@ -4,12 +4,12 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, generics, views, status
 from rest_framework.response import Response
 from users.serializers import UserSerializer
+from users.models import UserAccount
 from django.contrib.auth import authenticate, login, logout
 
-User = get_user_model()
 
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
+class UserDetail(generics.ListCreateAPIView):
+    queryset = UserAccount.objects.all()
     serializer_class = UserSerializer
 
 class UserByName(generics.ListCreateAPIView):
@@ -17,18 +17,18 @@ class UserByName(generics.ListCreateAPIView):
 
     def get_queryset(self):
         username = self.kwargs['username']
-        return User.objects.filter(username=username)
+        return UserAccount.objects.filter(username=username)
 
 class AccountViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
-    queryset = User.objects.all()
+    queryset = UserAccount.objects.all()
     serializer_class = UserSerializer
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-            User.objects.create_user(**serializer.validated_data)
+            UserAccount.objects.create_user(**serializer.validated_data)
 
             return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
 
