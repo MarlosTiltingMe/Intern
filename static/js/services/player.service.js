@@ -185,7 +185,8 @@ function PlayerService($window, $http, $rootScope, SongService) {
             vars: {
                 rel: 0,
                 showinfo: 0,
-                autoplay: 1
+                autoplay: 1,
+                controls: 1
             },
             events: {
                 'onReady': onTubeReady,
