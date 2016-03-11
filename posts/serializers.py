@@ -16,4 +16,5 @@ class SongSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Songs
-        fields = ('created', 'song', 'id', 'upvotes')
+        fields = ('created', 'song', 'id', 'upvotes', 'start_time', 'end_time',
+        'minutes', 'seconds')

@@ -142,6 +142,9 @@ function PlayerService($window, $http, $rootScope, SongService) {
                 tube.player.cueVideoById(thanesIdea[tube.current].song);
                 tube.player.playVideo();
                 reset();
+                $http.get('/api/songs/').success(function(data) {
+                  //
+                });
               }else {
                 playArchived();
               }
