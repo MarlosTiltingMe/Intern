@@ -7,6 +7,7 @@ Intern.config( function ($httpProvider) {
 function PlayerService($window, $http, $rootScope, SongService) {
 
     var service = this;
+    var obj = {};
 
     var tube = {
       ready: false,
@@ -30,22 +31,31 @@ function PlayerService($window, $http, $rootScope, SongService) {
     **/
     function getSongs(callback) {
       return SongService.list().success(function(response) {
-        if(response.length > 0) {
-          for(var c = 0; c < tube.entries; c++) { //ha
-            thanesIdea.splice(c, 0, response[c]);
+
+        var now = moment();
+        obj.start = response[0].start_time;
+
+        now  =  moment(now).add(1, 'd');
+        time =  moment(now).add(7, 'h').format();
+
+
+        setInterval(function() {
+          if(response[0].start_time == time) {
+            if(callback)  callback();
+            console.log('destroyed');
           }
-          tube.player.cueVideoById(thanesIdea[tube.current].song);
-          tube.player.playVideo();
-        }
-        if(callback)  callback();
+        }, 1000);
+
+        ready();
       });
     }
 
     //Destroys each object in the array's REST object, then calls reset();.
     function destroy(callback) {
-      if(thanesIdea.length > 0) {
-        SongService.destroy(thanesIdea, tube.entries, reset);
-      }
+      console.log('Destroy hit');
+      $http.delete('/api/songs/' + data.data[0].id + '/').success(function() {
+        if(callback)  callback();
+      });
     }
 
     //Checks current song position. If it's > tube.entries.
@@ -83,24 +93,24 @@ function PlayerService($window, $http, $rootScope, SongService) {
     //Event bus
     function onTubeReady(event) {
       getSongs(ready);
-      function ready() {
-        if(thanesIdea[tube.current]) {
-          tube.player.cueVideoById(thanesIdea[tube.current].song);
-          tube.player.playVideo();
-          SongService.destroy(thanesIdea, 1, function(data){
-            thanesIdea = [];
-          });
-        }else {
-          playArchived();
-        }
+    }
+
+    function ready() {
+      if(thanesIdea[tube.current]) {
+        tube.player.cueVideoById(thanesIdea[tube.current].song);
+        tube.player.playVideo();
+        SongService.destroy(thanesIdea, 1, function(data){
+          thanesIdea = [];
+        });
+      }else {
+        playArchived();
       }
     }
 
     //Does exactly what it says, man.
     function playArchived() {
       return SongService.archiveList().success(function(data) {
-        //alert('Playing an archived song. Want to request a song? Go for it! It will' +
-        //'play next.');
+
         thanesIdea.splice(0, 0, data[Math.floor(Math.random() * data.length - 1) + 1]);
         service.launch(thanesIdea[0].song);
         tube.current = tube.current + 1;
@@ -134,21 +144,26 @@ function PlayerService($window, $http, $rootScope, SongService) {
         if (event.data == YT.PlayerState.PLAYING) {
           tube.state = 'playing';
         } else if (event.data == YT.PlayerState.PAUSED) {
-            tube.player.playVideo();
+          getSongs();
+          tube.player.playVideo();
         } else if (event.data == YT.PlayerState.ENDED) {
             tube.state = 'ended';
-            getSongs(function() {
-              if(thanesIdea[tube.current]) {
-                tube.player.cueVideoById(thanesIdea[tube.current].song);
-                tube.player.playVideo();
-                reset();
-                $http.get('/api/songs/').success(function(data) {
-                  //
-                });
-              }else {
-                playArchived();
-              }
-          });
+
+
+
+
+          //   getSongs(function() {
+          //     if(thanesIdea[tube.current]) {
+          //       tube.player.cueVideoById(thanesIdea[tube.current].song);
+          //       tube.player.playVideo();
+          //       reset();
+          //       $http.get('/api/songs/').success(function(data) {
+          //         //thanesIdea = [];
+          //       });
+          //     }else {
+          //       playArchived();
+          //     }
+          // });
         $rootScope.$apply();
     }
   }

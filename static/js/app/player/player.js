@@ -15,7 +15,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       $scope.archiveList = data;
       idToName();
     });
-    moment.tz.add('America/Los_Angeles|PST PDT|80 70|0101|1Lzm0 1zb0 Op0');
+    //moment.tz.add('America/Los_Angeles|PST PDT|80 70|0101|1Lzm0 1zb0 Op0');
   }
 
   $scope.calculateDur = function(id) {
@@ -51,20 +51,27 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     }
   }
 
-  //moment(data[0].end_time).add(4, 'm').format()
+
+  /**
+  This function's pretty cool imo. It's nothing special, though.
+  It's just grabbing the last-queued song's start time and duration then
+  it adds them together to output a estimated start-time of the newly
+  requested song. Also posts the new song with its' duration.
+
+  Also, to those who noticed... Yes, this means this will only work properly
+  in one timezone. My timezone. This is just testing the concept. If this
+  function is still in the repo, that means I'm still testing/messing around
+  with things. Don't open an issue, and more importantly, don't dm me
+  on Twitter. I don't care.
+  **/
 
   $scope.create = function(id, obj) {
-
     getPrevious(function(data) {
-      console.log(data[0].start_time);
 
       var startTime = moment(data[0].start_time).add(data[0].minutes, 'm').add(
         data[0].seconds, 's'
-      ).format();
+      ).zone("+05:00").format();
 
-      test = moment(startTime).zone("+05:00");
-
-      console.log(test);
       SongService.create({song:id, minutes:obj.minutes[0], seconds:obj.seconds,
         start_time: startTime
       });
