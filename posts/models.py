@@ -14,7 +14,7 @@ class Archive(models.Model):
     def save(self, *args, **kwargs):
         options = self.song and {'song': self.song} or {}
         super(Archive, self).save(*args, **kwargs)
-        
+
     class Meta:
         ordering = ('created',)
 
@@ -27,7 +27,7 @@ class Songs(models.Model):
     end_time = models.DateTimeField(default=datetime.datetime.now())
     minutes = models.IntegerField(default='1');
     seconds = models.IntegerField(default='1');
-
+    
     def __str__(self):
         return self.song
 

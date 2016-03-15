@@ -27,6 +27,10 @@ function SongService($http, AuthService) {
     return $http.post('/api/Archives/', post);
   }
 
+  function dispose(id) {
+    return $http.delete('/api/songs/' + id + '/');
+  }
+
   /**
   The mother of all functions. This terrible looking thing handles
   most of the erroneous states that the player might run into.
@@ -45,38 +49,43 @@ function SongService($http, AuthService) {
   the best option.
    **/
   function destroy(songs, amount, callback) {
-    for(var i = 0; i < amount; i++) {
-      if(songs.length > 0) {
+    for (var i = 0; i < amount; i++) {
+      if (songs.length > 0) {
         var user = AuthService.getAuthenticatedAccount();
-        if(AuthService.isAuthenticated()) {
-          archive({song:songs[i].song, upvotes:1, requester:user.id});
+        if (AuthService.isAuthenticated()) {
+          archive({
+            song: songs[i].song,
+            upvotes: 1,
+            requester: user.id
+          });
         }
       }
-      if(songs.length > 0) {
+      if (songs.length > 0) {
         var request = $http.get('/api/song/' + songs[i].song + '/').then(a, b);
       }
 
       function a(data, status, headers, config) {
 
-        if(data.data.length > 0) {
+        if (data.data.length > 0) {
           return $http.delete('/api/songs/' + data.data[0].id + '/').then(c, d);
         } else {
-          if(callback)  callback();
+          if (callback) callback();
         }
 
         function c(data, status, headers, config) {
-          if(i == amount && callback)  callback();
+          if (i == amount && callback) callback();
         }
 
         function d(data, status, headers, config) {
-          if(callback)  callback();
+          if (callback) callback();
         }
-    }
-    function b(data, status, headers, config) {
-      if(callback)  callback();
+      }
+
+      function b(data, status, headers, config) {
+        if (callback) callback();
+      }
     }
   }
-}
 
   return {
     create: create,
@@ -84,6 +93,7 @@ function SongService($http, AuthService) {
     get: get,
     update: update,
     destroy: destroy,
-    archiveList: archiveList
+    archiveList: archiveList,
+    dispose: dispose
   };
 }
