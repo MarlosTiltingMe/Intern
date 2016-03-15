@@ -36,14 +36,23 @@ class SongSerializer(serializers.ModelSerializer):
 
         if "Z" not in start_time:
             parse = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S.%f')
+            a = parse + timedelta(minutes=minutes)
+            b = a + timedelta(seconds=seconds)
+            return Songs.objects.create(
+                song=validated_data['song'],
+                start_time=b,
+                minutes=0,
+                seconds=1
+            )
+
         else:
             parse = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S.%fZ')
-        a = parse + timedelta(minutes=minutes)
-        b = a + timedelta(seconds=seconds)
+            a = parse + timedelta(minutes=minutes)
+            b = a + timedelta(seconds=seconds)
 
-        return Songs.objects.create(
-            song=validated_data['song'],
-            start_time=b,
-            minutes=validated_data['minutes'],
-            seconds=validated_data['seconds']
-        )
+            return Songs.objects.create(
+                song=validated_data['song'],
+                start_time=b,
+                minutes=validated_data['minutes'],
+                seconds=validated_data['seconds']
+            )
