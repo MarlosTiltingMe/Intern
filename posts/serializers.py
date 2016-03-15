@@ -24,25 +24,17 @@ class SongSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         r = requests.get('http://localhost:8000/api/songs/')
         data = json.loads(r.text)
-
-        if(len(data) > 0):
-            start_time = data[0]["start_time"]
-            minutes    = data[0]["minutes"]
-            seconds    = data[0]["seconds"]
-        else:
-            key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k'
-            url = 'https://www.googleapis.com/youtube/v3/videos?id=' + validated_data['song'] + '&part=contentDetails&key=' + key
-            r = requests.get(url)
-
-            resp = json.loads(r.text)
-            c = resp['items'][0]['contentDetails']['duration']
-            d = c.split('PT')[1].split('M')
-            nMinutes = d[0]
-            nSeconds = d[1].split('S')[0]
-
-            start_time = str(datetime.now())
-            minutes = nMinutes
-            seconds = nSeconds
+        key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k'
+        url = 'https://www.googleapis.com/youtube/v3/videos?id=' + validated_data['song'] + '&part=contentDetails&key=' + key
+        r = requests.get(url)
+        resp = json.loads(r.text)
+        c = resp['items'][0]['contentDetails']['duration']
+        d = c.split('PT')[1].split('M')
+        nMinutes = d[0]
+        nSeconds = d[1].split('S')[0]
+        start_time = str(datetime.now())
+        minutes = nMinutes
+        seconds = nSeconds
 
         if "Z" not in start_time:
             parse = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S.%f')
