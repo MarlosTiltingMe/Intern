@@ -25,13 +25,19 @@ class SongSerializer(serializers.ModelSerializer):
         r = requests.get('http://localhost:8000/api/songs/')
         data = json.loads(r.text)
 
-        start_time = data[len(data) - 1]["start_time"]
-        minutes    = data[len(data) - 1]["minutes"]
-        seconds    = data[len(data) - 1]["seconds"]
+        if(len(data) > 0):
+            start_time = data[0]["start_time"]
+            minutes    = data[0]["minutes"]
+            seconds    = data[0]["seconds"]
+        else:
+            start_time = str(datetime.now())
+            minutes = 1
+            seconds = 1
 
-
-
-        parse = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S.%fZ')
+        if "Z" not in start_time:
+            parse = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S.%f')
+        else:
+            parse = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S.%fZ')
         a = parse + timedelta(minutes=minutes)
         b = a + timedelta(seconds=seconds)
 

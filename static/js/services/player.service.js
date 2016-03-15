@@ -114,7 +114,8 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
   //Resets if an error occurs.
   function onTubeError(event) {
-
+    alert('No songs pending.. Request one!');
+    getSongs(ready);
   }
 
   //launches player with given song id.

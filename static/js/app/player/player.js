@@ -68,10 +68,14 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
   $scope.create = function(id, obj) {
     getPrevious(function(data) {
 
-      var startTime = moment(data[0].start_time).add(data[0].minutes, 'm').add(
-        data[0].seconds, 's'
-      ).zone("+05:00").format();
-
+      if(data.length > 0) {
+        var startTime = moment(data[0].start_time).add(data[0].minutes, 'm').add(
+          data[0].seconds, 's'
+        ).zone("+05:00").format();
+      } else {
+        var starttime = moment().zone("+05:00").format();
+      }
+      
       SongService.create({song:id, minutes:obj.minutes[0], seconds:obj.seconds,
         start_time: startTime
       });
