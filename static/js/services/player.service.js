@@ -53,15 +53,13 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
   function decimate(callback) {
 
-    SongService.delete(songQueue.id).success(function() {
+    SongService.dispose(songQueue.id).success(function() {
       if (callback) callback();
     });
   }
 
   function loop(data) {
     var timer = (data.minutes * 60000) + data.seconds * 1000;
-    console.log(timer);
-    console.log(data.id + ':' + data.song);
     setTimeout(function() {
       SongService.dispose(data.id).then(a, b);
 
@@ -73,7 +71,7 @@ function PlayerService($window, $http, $rootScope, SongService) {
         getSongs(ready);
       }
 
-    }, timer);
+    }, timer - 2000);
   }
 
   //Event bus
@@ -86,18 +84,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
     tube.player.playVideo();
   }
 
-  //Does exactly what it says, man.
-  function playArchived() {
-    return SongService.archiveList().success(function(data) {
-
-      thanesIdea.splice(0, 0, data[Math.floor(Math.random() * data.length -
-        1) + 1]);
-      service.launch(thanesIdea[0].song);
-      tube.current = tube.current + 1;
-      tube.player.playVideo();
-    });
-  }
-
   //Straight forward. Checks states, if a song ended, check queue
   //and callback to reset.
   function onTubeStateChange(event) {
@@ -107,7 +93,7 @@ function PlayerService($window, $http, $rootScope, SongService) {
       tube.player.playVideo();
     } else if (event.data == YT.PlayerState.ENDED) {
       tube.state = 'ended';
-
+      getSongs(ready);
       $rootScope.$apply();
     }
   }

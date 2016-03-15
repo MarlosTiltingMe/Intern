@@ -30,14 +30,24 @@ class SongSerializer(serializers.ModelSerializer):
             minutes    = data[0]["minutes"]
             seconds    = data[0]["seconds"]
         else:
+            key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k'
+            url = 'https://www.googleapis.com/youtube/v3/videos?id=' + validated_data['song'] + '&part=contentDetails&key=' + key
+            r = requests.get(url)
+
+            resp = json.loads(r.text)
+            c = resp['items'][0]['contentDetails']['duration']
+            d = c.split('PT')[1].split('M')
+            nMinutes = d[0]
+            nSeconds = d[1].split('S')[0]
+
             start_time = str(datetime.now())
-            minutes = 1
-            seconds = 1
+            minutes = nMinutes
+            seconds = nSeconds
 
         if "Z" not in start_time:
             parse = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S.%f')
-            a = parse + timedelta(minutes=minutes)
-            b = a + timedelta(seconds=seconds)
+            a = parse + timedelta(minutes=int(minutes))
+            b = a + timedelta(seconds=int(seconds))
             return Songs.objects.create(
                 song=validated_data['song'],
                 start_time=b,
