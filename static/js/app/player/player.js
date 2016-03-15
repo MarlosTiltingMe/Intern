@@ -18,19 +18,26 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
   }
 
   $scope.calculateDur = function(id) {
-    console.log('calc dir');
-    var key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k';
-    var url = 'https://www.googleapis.com/youtube/v3/videos?id=' + id +
-    '&part=contentDetails&key=' + key;
 
-    $http.get(url).success(function(data) {
+    var x = id;
+    if (x.indexOf('youtube') > -1){
+      alert('Only request the song id(all text after watch?v=).');
+      return false;
+    } else {
+      var key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k';
+      var url = 'https://www.googleapis.com/youtube/v3/videos?id=' + id +
+      '&part=contentDetails&key=' + key;
 
-      var parsedTime = data.items[0].contentDetails.duration.split('PT')[1];
-      obj.minutes = parsedTime.split('M');
-      obj.seconds = obj.minutes[1].split('S')[0];
+      $http.get(url).success(function(data) {
 
-      $scope.create(id, obj);
-    });
+        var parsedTime = data.items[0].contentDetails.duration.split('PT')[1];
+        obj.minutes = parsedTime.split('M');
+        obj.seconds = obj.minutes[1].split('S')[0];
+
+        $scope.create(id, obj);
+      });
+
+    }
   }
 
   $scope.launch = function(id) {
