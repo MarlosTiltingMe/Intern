@@ -41,8 +41,8 @@ class SongSerializer(serializers.ModelSerializer):
             return Songs.objects.create(
                 song=validated_data['song'],
                 start_time=b,
-                minutes=0,
-                seconds=1
+                minutes=minutes,
+                seconds=seconds
             )
 
         else:
@@ -53,6 +53,6 @@ class SongSerializer(serializers.ModelSerializer):
             return Songs.objects.create(
                 song=validated_data['song'],
                 start_time=b,
-                minutes=validated_data['minutes'],
-                seconds=validated_data['seconds']
+                minutes=minutes,
+                seconds=seconds
             )

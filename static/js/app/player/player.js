@@ -73,9 +73,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
           data[0].seconds, 's'
         ).zone("+05:00").format();
       } else {
-        var starttime = moment().zone("+05:00").format();
+        var startTime = moment().zone("+05:00").format();
       }
-      
       SongService.create({song:id, minutes:obj.minutes[0], seconds:obj.seconds,
         start_time: startTime
       });
