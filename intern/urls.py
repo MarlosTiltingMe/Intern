@@ -11,6 +11,7 @@ router = routers.DefaultRouter()
 router.register(r'users', AccountViewSet)
 router.register(r'Archives', views.ArchiveViewSet)
 router.register(r'songs', views.SongViewSet)
+router.register(r'test', views.TestViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

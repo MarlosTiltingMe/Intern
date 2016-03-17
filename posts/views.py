@@ -1,14 +1,26 @@
 from posts.models import Archive, Songs
+from users.models import UserAccount
 from posts.serializers import ArchiveSerializer, SongSerializer
+from users.serializers import UserSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework import status, mixins, generics, permissions, renderers, viewsets
-from django.contrib.auth.models import User
 from posts.permissions import IsOwnerOrReadOnly
-from django.contrib.auth.models import User
+
+class TestViewSet(viewsets.ModelViewSet):
+    queryset = UserAccount.objects.all()
+    model = UserAccount
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def list(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
 
 class ArchiveList(generics.ListCreateAPIView):
     """

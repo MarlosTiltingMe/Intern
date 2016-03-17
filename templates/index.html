@@ -7,11 +7,10 @@
 </head>
 <body ng-controller="AuthController as auth">
   {%verbatim%}
-  <div id="nav" class="nav navbar-inverse">
+  <div id="nav" class="nav navbar-inverse" ng-init="init()">
     <a class="navbar-brand" href="/">Marlo</a>
       <ul class="nav navbar-nav navbar-left" ng-switch="isAuthenticated()">
-        <li ng-switch-when=true><a href="">{{userModel.username}}</a></li>
-        <li ng-switch-when=true ng-click="logout()"><a href="/">Logout</a></li>
+        <li ng-switch-when=true><a href="">{{userModel}}</a></li>
         <li ng-switch-when=false><a href="/login">Login</a></li>
         <li ng-switch-when=false><a href="/auth">Register</a></li>
     </ul>

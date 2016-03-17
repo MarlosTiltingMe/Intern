@@ -37,41 +37,56 @@ function PlayerService($window, $http, $rootScope, SongService) {
     $rootScope.$apply();
   }
 
+  //Does exactly what it says, man.
+  function playArchived() {
+    return SongService.archiveList().success(function(data) {
+      service.launch(data[Math.floor(Math.random() * data.length)].song);
+      tube.player.playVideo();
+    });
+  }
+
   function getSongs(callback) {
 
     SongService.list().success(function(data) {
-      songQueue.id = data[0].id;
-      songQueue.song = data[0].song;
-      songQueue.minutes = data[0].minutes;
-      songQueue.seconds = data[0].seconds;
-
-      songQueue.length = data.length;
-      loop(songQueue);
-      if(callback)  callback();
+      if (data.length) {
+        songQueue.id = data[0].id;
+        songQueue.song = data[0].song;
+        songQueue.seconds = data[0].seconds;
+        songQueue.length = data.length;
+        songQueue.minutes = data[0].minutes;
+        loop(songQueue);
+        if(callback)  callback();
+      } else {
+        playArchived();
+      }
     });
   }
 
-  function decimate(callback) {
 
-    SongService.dispose(songQueue.id).success(function() {
-      if (callback) callback();
-    });
-  }
+  /** I hate myself. This function is so ugly, but it works. Will refactor it
+  before final production push.**/
+  function loop(queue) {
+      var timer = (queue.minutes * 60000) + queue.seconds * 1000;
+      setTimeout(function() {
+          SongService.dispose(queue.id).then(a, b);
 
-  function loop(data) {
-    var timer = (data.minutes * 60000) + data.seconds * 1000;
-    setTimeout(function() {
-      SongService.dispose(data.id).then(a, b);
+          function a(data, status, headers, config) {
 
-      function a(data, status, headers, config) {
-        getSongs(ready);
-      }
+              $http.get('/api/test/').success(function(data) {
+                  SongService.archive({
+                      song: queue.song,
+                      upvotes: 1,
+                      requester: data.id
+                  }).success(function() {
+                      getSongs(ready);
+                  });
+              });
+          }
 
-      function b(data, status, headers, config) {
-        getSongs(ready);
-      }
-
-    }, timer - 2000);
+          function b(data, status, headers, config) {
+              getSongs(ready);
+          }
+      }, timer - 1000);
   }
 
   //Event bus
@@ -100,7 +115,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
   //Resets if an error occurs.
   function onTubeError(event) {
-    alert('No songs pending.. Request one!');
     getSongs(ready);
   }
 

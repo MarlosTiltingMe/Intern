@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from users.serializers import UserSerializer
 from users.models import UserAccount
 from django.contrib.auth import authenticate, login, logout
-
+from posts.models import UserAccount
 
 class UserDetail(generics.ListCreateAPIView):
     queryset = UserAccount.objects.all()
@@ -23,6 +23,12 @@ class AccountViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     queryset = UserAccount.objects.all()
     serializer_class = UserSerializer
+
+    model = UserAccount
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)

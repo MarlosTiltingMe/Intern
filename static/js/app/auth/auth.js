@@ -1,7 +1,11 @@
 Intern.controller('AuthController', AuthController);
 AuthController.inject = ['$cookies'];
 
-function AuthController($scope, $cookies, AuthService) {
+function AuthController($scope, $http, $cookies, AuthService) {
+
+  $scope.init = function() {
+    currentUser();
+  }
 
   $scope.register = function(email, username, password) {
     AuthService.register(email, username, password);
@@ -13,9 +17,15 @@ function AuthController($scope, $cookies, AuthService) {
     AuthService.logout();
   }
   $scope.isAuthenticated = function() {
-    return AuthService.isAuthenticated();
+    if ($scope.userModel) {
+      return true;
+    }
   }
 
-  $scope.userModel = AuthService.getAuthenticatedAccount();
-
+  function currentUser() {
+    $http.get('/api/test/').success(function(data) {
+      $scope.userModel = data.username;
+      return data.username;
+    });
+  }
 }

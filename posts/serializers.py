@@ -12,6 +12,13 @@ class ArchiveSerializer(serializers.ModelSerializer):
         model = Archive
         fields = ('url', 'created', 'id', 'song', 'upvotes', 'requester')
 
+    def create(self, validated_data):
+        return Archive.objects.create(
+            requester=self.context['request'].user,
+            song=validated_data['song'],
+            upvotes=validated_data['upvotes'],
+        )
+
 
 class SongSerializer(serializers.ModelSerializer):
     upvotes = serializers.ReadOnlyField()

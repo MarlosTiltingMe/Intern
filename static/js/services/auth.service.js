@@ -3,32 +3,14 @@ AuthService.$inject = ['$cookies', '$http'];
 
 function AuthService($cookies, $http) {
   var AuthService = {
-    isAuthenticated: isAuthenticated,
     login: login,
     logout: logout,
     register: register,
     setAuthenticatedAccount: setAuthenticatedAccount,
-    getAuthenticatedAccount: getAuthenticatedAccount,
     unauthenticate: unauthenticate
   };
 
   return AuthService;
-
-  function getAuthenticatedAccount() {
-    if(!$cookies.get('authenticated')) {
-      return;
-    }
-    return JSON.parse($cookies.get('authenticated'));
-  }
-
-  function isAuthenticated() {
-    if($cookies.get('authenticated')) {
-      return true;
-    } else {
-      return false;
-    }
-    //For some reason return !!cookies.get('session') didn't return proper data..
-  }
 
   function login(username, password) {
     return $http.post('/api/auth/login/', {
@@ -47,12 +29,8 @@ function AuthService($cookies, $http) {
   }
 
   function logout() {
-    if(AuthService.isAuthenticated()) {
-      return $http.post('/api/auth/logout/')
-        .then(logoutSuccessFn, logoutErrorFn);
-      } else {
-        alert('Can\'t logout when you\'re not even logged in, silly goose.');
-      }
+    return $http.post('/api/auth/logout/')
+    .then(logoutSuccessFn, logoutErrorFn);
 
       function logoutSuccessFn(data, status, headers, config) {
         AuthService.unauthenticate();
@@ -84,11 +62,11 @@ function AuthService($cookies, $http) {
 
   function setAuthenticatedAccount(account) {
     return $http.get('/api/user/' + account.username + '/').success(function(data) {
-      $cookies.put('authenticated', JSON.stringify(account));
+      //$cookies.put('sessionid', JSON.stringify(account));
     });
   }
 
   function unauthenticate() {
-    $cookies.remove('authenticated');
+    //$cookies.remove('sessionid');
   }
 }
