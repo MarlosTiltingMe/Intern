@@ -19,13 +19,21 @@ function AuthController($scope, $http, $cookies, AuthService) {
   $scope.isAuthenticated = function() {
     if ($scope.userModel) {
       return true;
+    } else {
+      return false;
     }
   }
 
   function currentUser() {
     $http.get('/api/test/').success(function(data) {
-      $scope.userModel = data.username;
-      return data.username;
+
+      if(data.id) {
+        $scope.userModel = data.username;
+        return data.username;
+      } else {
+        $scope.userModel = 'Anon';
+      }
+
     });
   }
 }
