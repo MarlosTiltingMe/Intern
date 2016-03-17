@@ -82,6 +82,15 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
             } else {
                 var startTime = moment().zone("+05:00").format();
             }
+
+            $http.get('/api/test/').success(function(data) {
+                SongService.archive({
+                    song: id,
+                    upvotes: 1,
+                    requester: data.id
+                });
+            });
+
             SongService.create({
                 song: id,
                 minutes: obj.minutes[0],

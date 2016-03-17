@@ -24,12 +24,6 @@ class AccountViewSet(viewsets.ModelViewSet):
     queryset = UserAccount.objects.all()
     serializer_class = UserSerializer
 
-    model = UserAccount
-    serializer_class = UserSerializer
-
-    def get_object(self):
-        return self.request.user
-
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
 

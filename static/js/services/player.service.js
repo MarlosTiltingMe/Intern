@@ -71,16 +71,7 @@ function PlayerService($window, $http, $rootScope, SongService) {
           SongService.dispose(queue.id).then(a, b);
 
           function a(data, status, headers, config) {
-
-              $http.get('/api/test/').success(function(data) {
-                  SongService.archive({
-                      song: queue.song,
-                      upvotes: 1,
-                      requester: data.id
-                  }).success(function() {
-                      getSongs(ready);
-                  });
-              });
+            getSongs(ready);
           }
 
           function b(data, status, headers, config) {
@@ -135,11 +126,9 @@ function PlayerService($window, $http, $rootScope, SongService) {
     return new YT.Player(tube.playerId, {
       height: tube.height,
       width: tube.width,
-      vars: {
-        rel: 0,
-        showinfo: 0,
-        autoplay: 1,
-        controls: 1
+      playerVars: {
+        'showinfo':0,
+        'controls':0
       },
       events: {
         'onReady': onTubeReady,
