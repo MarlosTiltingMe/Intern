@@ -10,13 +10,14 @@ class ArchiveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Archive
-        fields = ('url', 'created', 'id', 'song', 'upvotes', 'requester')
+        fields = ('url', 'created', 'id', 'song', 'upvotes', 'requester', 'title')
 
     def create(self, validated_data):
         return Archive.objects.create(
             requester=self.context['request'].user,
             song=validated_data['song'],
             upvotes=validated_data['upvotes'],
+            title=validated_data['title']
         )
 
 
@@ -25,7 +26,7 @@ class SongSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Songs
-        fields = ('created', 'song', 'id', 'upvotes', 'start_time',
+        fields = ('title', 'created', 'song', 'id', 'upvotes', 'start_time',
         'minutes', 'seconds')
 
     def create(self, validated_data):
@@ -51,7 +52,8 @@ class SongSerializer(serializers.ModelSerializer):
                 song=validated_data['song'],
                 start_time=b,
                 minutes=minutes,
-                seconds=seconds
+                seconds=seconds,
+                title=validated_data['title']
             )
 
         else:
@@ -63,5 +65,6 @@ class SongSerializer(serializers.ModelSerializer):
                 song=validated_data['song'],
                 start_time=b,
                 minutes=minutes,
-                seconds=seconds
+                seconds=seconds,
+                title=validated_data['title'],
             )

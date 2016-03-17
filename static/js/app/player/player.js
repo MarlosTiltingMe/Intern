@@ -5,15 +5,28 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
     var obj = {};
 
+    $scope.$on("get_title", function(event, args) {
+      getList(function(data) {
+        $scope.title = data[0].title;
+        $scope.$apply;
+      });
+    });
+
+    $scope.$on("get_archived", function(event, args) {
+      $scope.title = args.param.title;
+    });
+
     function start() {
         $scope.youtube = PlayerService.getTube();
         $scope.pList = true;
+        //callInfo();
     }
 
     $scope.init = function() {
         SongService.archiveList().success(function(data) {
             $scope.archiveList = data;
             idToName();
+            $scope.$apply;
         });
     }
 
@@ -25,6 +38,9 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
             return false;
         } else {
             var key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k';
+            var perId = 'https://www.googleapis.com/youtube/v3/videos?'
+            + 'part=snippet&id=' + id + '&key=' + key;
+
             var url = 'https://www.googleapis.com/youtube/v3/videos?id=' + id +
                 '&part=contentDetails&key=' + key;
 
@@ -34,7 +50,11 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                 obj.minutes = parsedTime.split('M');
                 obj.seconds = obj.minutes[1].split('S')[0];
 
-                $scope.create(id, obj);
+                $http.get(perId).success(function(resp) {
+                  obj.title = resp.items[0].snippet.title;
+                  console.log(obj.title);
+                  $scope.create(id, obj);
+                });
             });
 
         }
@@ -50,14 +70,16 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     };
 
     function getPrevious(callback) {
-
         getList(go);
-
         function go(data) {
             if (callback) callback(data);
         }
     }
 
+    $scope.newHistory = function() {
+      console.log('new');
+      $scope.init();
+    }
 
     /**
     This function's pretty cool imo. It's nothing special, though.
@@ -76,7 +98,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         getPrevious(function(data) {
 
             if (data.length > 0) {
-                var startTime = moment(data[0].start_time).add(data[0].minutes, 'm').add(
+                var startTime = moment(data[0].start_time)
+                  .add(data[0].minutes, 'm').add(
                     data[0].seconds, 's'
                 ).zone("+05:00").format();
             } else {
@@ -87,7 +110,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                 SongService.archive({
                     song: id,
                     upvotes: 1,
-                    requester: data.id
+                    requester: data.id,
+                    title: obj.title
                 });
             });
 
@@ -95,7 +119,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                 song: id,
                 minutes: obj.minutes[0],
                 seconds: obj.seconds,
-                start_time: startTime
+                start_time: startTime,
+                title: obj.title
             });
         });
     }
@@ -114,7 +139,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
     $scope.map = function(key) {
         return $scope.hmap.get(key);
-        console.log(key);
     }
 
     function getList(callback) {

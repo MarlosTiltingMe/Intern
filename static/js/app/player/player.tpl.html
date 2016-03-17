@@ -2,13 +2,16 @@
   <div class="alert alert-danger" role="alert" style="width:100%;">In order to keep the player as synced as possible
   across clients, I've disabled pausing of the player. To mute the player quickly, press the RIGHT arrow.
   In contrary, the LEFT arrow key will un-mute the player's audio.</div>
+  <h3>{{title}}</h3>
   <div id="player">
     <div id="player"></div>
   </div>
   <input type="text" name="song" ng-model="song">
   <button id="go" ng-click="calculateDur(song)">Request</button>
   <div class="panel panel-default">
-    <div class="panel-heading">History</div>
+    <div class="panel-heading">History({{archiveList.length}})
+      <img id="ref" ng-click="newHistory()" height="20" width="20"
+        src="http://i.imgur.com/fukEMZV.png"></div>
     <table class=table>
        <thead>
            <tr>

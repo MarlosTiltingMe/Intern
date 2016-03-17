@@ -40,7 +40,11 @@ function PlayerService($window, $http, $rootScope, SongService) {
   //Does exactly what it says, man.
   function playArchived() {
     return SongService.archiveList().success(function(data) {
-      service.launch(data[Math.floor(Math.random() * data.length)].song);
+
+      var archivedSong = data[Math.floor(Math.random() * data.length)];
+      var title = archivedSong.title;
+      $rootScope.$broadcast("get_archived", { param: { title } });
+      service.launch(archivedSong.song);
       tube.player.playVideo();
     });
   }
@@ -54,6 +58,9 @@ function PlayerService($window, $http, $rootScope, SongService) {
         songQueue.seconds = data[0].seconds;
         songQueue.length = data.length;
         songQueue.minutes = data[0].minutes;
+
+        $rootScope.$broadcast("get_title");
+
         loop(songQueue);
         if(callback)  callback();
       } else {
@@ -90,8 +97,8 @@ function PlayerService($window, $http, $rootScope, SongService) {
     tube.player.playVideo();
   }
 
-  //Straight forward. Checks states, if a song ended, check queue
-  //and callback to reset.
+  /*Straight forward. Checks states, if a song ended, check queue
+  and callback to reset.*/
   function onTubeStateChange(event) {
     if (event.data == YT.PlayerState.PLAYING) {
       tube.state = 'playing';
@@ -148,8 +155,8 @@ function PlayerService($window, $http, $rootScope, SongService) {
     }
   };
 
-  //Queue function that I'm pretty sure I stopped using.
-  //Might come in handy so keeping it.
+  /*Queue function that I'm pretty sure I stopped using.
+  Might come in handy so keeping it.*/
   this.queue = function(id) {
     queued.push({
       id: id
