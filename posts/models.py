@@ -29,7 +29,8 @@ class Songs(models.Model):
     minutes = models.IntegerField(default='1');
     seconds = models.IntegerField(default='1');
     title = models.CharField(default='None', max_length=100)
-
+    requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.song
 

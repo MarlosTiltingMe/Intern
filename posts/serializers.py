@@ -27,7 +27,7 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Songs
         fields = ('title', 'created', 'song', 'id', 'upvotes', 'start_time',
-        'minutes', 'seconds')
+        'minutes', 'seconds', 'requester')
 
     def create(self, validated_data):
         r = requests.get('http://localhost:8000/api/songs/')
@@ -53,7 +53,8 @@ class SongSerializer(serializers.ModelSerializer):
                 start_time=b,
                 minutes=minutes,
                 seconds=seconds,
-                title=validated_data['title']
+                title=validated_data['title'],
+                requester=self.context['request'].user
             )
 
         else:
@@ -67,4 +68,5 @@ class SongSerializer(serializers.ModelSerializer):
                 minutes=minutes,
                 seconds=seconds,
                 title=validated_data['title'],
+                requester=self.context['request'].user
             )

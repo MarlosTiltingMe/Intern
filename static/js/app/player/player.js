@@ -8,18 +8,20 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     $scope.$on("get_title", function(event, args) {
       getList(function(data) {
         $scope.title = data[0].title;
+        $scope.requester = data[0].requester;
         $scope.$apply;
       });
     });
 
     $scope.$on("get_archived", function(event, args) {
       $scope.title = args.param.title;
+      console.log(args.param.owner);
+      $scope.$apply;
     });
 
     function start() {
         $scope.youtube = PlayerService.getTube();
         $scope.pList = true;
-        //callInfo();
     }
 
     $scope.init = function() {

@@ -43,7 +43,10 @@ function PlayerService($window, $http, $rootScope, SongService) {
 
       var archivedSong = data[Math.floor(Math.random() * data.length)];
       var title = archivedSong.title;
-      $rootScope.$broadcast("get_archived", { param: { title } });
+      var requester = archivedSong.requester;
+
+      $rootScope.$broadcast("get_archived", { param: { title }, owner:
+      { requester }});
       service.launch(archivedSong.song);
       tube.player.playVideo();
     });
