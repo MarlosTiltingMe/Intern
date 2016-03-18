@@ -15,7 +15,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
     $scope.$on("get_archived", function(event, args) {
       $scope.title = args.param.title;
-      console.log(args.param.owner);
+      $scope.requester = args.owner.requester;
       $scope.$apply;
     });
 
