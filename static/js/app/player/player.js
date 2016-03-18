@@ -109,20 +109,23 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
             }
 
             $http.get('/api/test/').success(function(data) {
+
                 SongService.archive({
                     song: id,
                     upvotes: 1,
                     requester: data.id,
                     title: obj.title
                 });
-            });
 
-            SongService.create({
-                song: id,
-                minutes: obj.minutes[0],
-                seconds: obj.seconds,
-                start_time: startTime,
-                title: obj.title
+                SongService.create({
+                    song: id,
+                    minutes: obj.minutes[0],
+                    seconds: obj.seconds,
+                    start_time: startTime,
+                    title: obj.title,
+                    requester: data.id
+                });
+
             });
         });
     }
