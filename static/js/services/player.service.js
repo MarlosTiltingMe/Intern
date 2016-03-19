@@ -4,7 +4,7 @@ Intern.config(function($httpProvider) {
   delete $httpProvider.defaults.headers.common['X-Requested-With'];
 });
 
-function PlayerService($window, $http, $rootScope, SongService) {
+function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
   var service = this;
   var obj = {};
@@ -19,6 +19,8 @@ function PlayerService($window, $http, $rootScope, SongService) {
     id: null,
     playerId: null,
     state: 'stopped',
+    duration: null,
+    curTime: null
   };
 
   var songQueue = {
@@ -44,9 +46,18 @@ function PlayerService($window, $http, $rootScope, SongService) {
       var archivedSong = data[Math.floor(Math.random() * data.length)];
       var title = archivedSong.title;
       var requester = archivedSong.requester;
+      var minutes = archivedSong.minutes;
+      var seconds = archivedSong.seconds;
 
-      $rootScope.$broadcast("get_archived", { param: { title }, owner:
-      { requester }});
+      console.log(archivedSong);
+      $rootScope.$broadcast("get_archived",
+      {
+        param: { title },
+        owner: { requester },
+        mins: { minutes },
+        secs: { seconds }
+      });
+
       service.launch(archivedSong.song);
       tube.player.playVideo();
     });
@@ -63,7 +74,6 @@ function PlayerService($window, $http, $rootScope, SongService) {
         songQueue.minutes = data[0].minutes;
 
         $rootScope.$broadcast("get_title");
-
         loop(songQueue);
         if(callback)  callback();
       } else {
@@ -104,6 +114,12 @@ function PlayerService($window, $http, $rootScope, SongService) {
   and callback to reset.*/
   function onTubeStateChange(event) {
     if (event.data == YT.PlayerState.PLAYING) {
+      tube.duration = tube.player.getDuration();
+      console.log(tube.duration);
+      $interval(function() {
+        tube.curTime = tube.player.getCurrentTime();
+      }, 1000);
+
       tube.state = 'playing';
     } else if (event.data == YT.PlayerState.PAUSED) {
       tube.player.playVideo();

@@ -19,11 +19,11 @@ body {
 input{
     color: black !important;
 }
-.container>button {
+button {
   border: solid 1px white !important;
   background-image: linear-gradient(to bottom, #00CC55 0, #00992E 100%) !important;
 }
-.container>button:hover {z
+button:hover {z
   background-image: linear-gradient(to bottom, #00992E 0, #00CC55 100%) !important;
 }
 .panel-heading {

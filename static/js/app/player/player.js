@@ -1,14 +1,54 @@
 Intern.controller('PlayerController', PlayerController);
 
-function PlayerController($scope, $http, PlayerService, SongService, UserService) {
+function PlayerController($scope, $http, PlayerService, SongService, UserService,
+  $interval) {
     start();
 
     var obj = {};
+
+    $scope.isMuted = false;
+    function curVol() {
+      return $scope.youtube.player.getVolume();
+    }
+
+    $scope.timer = function() {
+      $interval(function() {
+        var totalTime = $scope.youtube.duration;
+        var curTime = Math.round($scope.youtube.curTime);
+        var timeDifference = (curTime / totalTime) * 100;
+        $scope.prog = Math.round(timeDifference);
+      }, 1000);
+    }
+
+    $scope.mute = function() {
+      if (!$scope.isMuted) {
+        $scope.isMuted = !$scope.isMuted;
+        $scope.youtube.player.mute();
+      }
+    }
+
+    $scope.unmute = function() {
+      if ($scope.isMuted) {
+        $scope.isMuted = !$scope.isMuted;
+        $scope.youtube.player.unMute();
+      }
+    }
+    $scope.volDown = function() {
+      var newVol = curVol() - 10;
+      $scope.youtube.player.setVolume(newVol);
+    }
+
+    $scope.volUp = function() {
+      var newVol = curVol() + 10;
+      $scope.youtube.player.setVolume(newVol);
+    }
 
     $scope.$on("get_title", function(event, args) {
       getList(function(data) {
         $scope.title = data[0].title;
         $scope.requester = data[0].requester;
+        $scope.minutes = data[0].minutes;
+        $scope.seconds = data[0].seconds;
         $scope.$apply;
       });
     });
@@ -16,6 +56,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     $scope.$on("get_archived", function(event, args) {
       $scope.title = args.param.title;
       $scope.requester = args.owner.requester;
+      $scope.minutes = args.mins.minutes;
+      $scope.seconds = args.secs.seconds;
       $scope.$apply;
     });
 
@@ -28,6 +70,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         SongService.archiveList().success(function(data) {
             $scope.archiveList = data;
             idToName();
+            $scope.timer();
             $scope.$apply;
         });
     }
@@ -40,6 +83,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
             return false;
         } else {
             var key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k';
+
             var perId = 'https://www.googleapis.com/youtube/v3/videos?'
             + 'part=snippet&id=' + id + '&key=' + key;
 
@@ -52,9 +96,11 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                 obj.minutes = parsedTime.split('M');
                 obj.seconds = obj.minutes[1].split('S')[0];
 
+                console.log(obj.minutes[0]);
+                console.log(obj.seconds);
+
                 $http.get(perId).success(function(resp) {
                   obj.title = resp.items[0].snippet.title;
-                  console.log(obj.title);
                   $scope.create(id, obj);
                 });
             });
@@ -114,7 +160,9 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                     song: id,
                     upvotes: 1,
                     requester: data.id,
-                    title: obj.title
+                    title: obj.title,
+                    minutes: obj.minutes[0],
+                    seconds: obj.seconds
                 });
 
                 SongService.create({

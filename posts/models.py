@@ -11,7 +11,9 @@ class Archive(models.Model):
     upvotes = models.IntegerField(default=1)
     requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     title = models.CharField(default='Pre-update request', max_length=100)
-
+    minutes = models.IntegerField(default='1')
+    seconds = models.IntegerField(default='1')
+    
     def save(self, *args, **kwargs):
         options = self.song and {'song': self.song} or {}
         super(Archive, self).save(*args, **kwargs)
@@ -30,7 +32,7 @@ class Songs(models.Model):
     seconds = models.IntegerField(default='1');
     title = models.CharField(default='None', max_length=100)
     requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
-    
+
     def __str__(self):
         return self.song
 
