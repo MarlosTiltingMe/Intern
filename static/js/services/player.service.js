@@ -32,12 +32,14 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
   };
 
   //Player is ready
-  $window.onYouTubeIframeAPIReady = function() {
-    tube.ready = true;
-    service.bind('player');
-    service.load();
-    $rootScope.$apply();
-  }
+  (function(){
+    $window.onYouTubeIframeAPIReady = function() {
+      tube.ready = true;
+      service.bind('player');
+      service.load();
+      $rootScope.$apply();
+    }
+  })();
 
   //Does exactly what it says, man.
   function playArchived() {

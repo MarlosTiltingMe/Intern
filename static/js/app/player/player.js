@@ -6,6 +6,12 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
     var obj = {};
 
+    $scope.onLoad = function() {
+      $scope.youtube.ready = true;
+      PlayerService.bind('player');
+      PlayerService.load();
+    }
+
     $scope.isMuted = false;
     function curVol() {
       return $scope.youtube.player.getVolume();

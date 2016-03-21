@@ -1,4 +1,4 @@
-/* Old color scheme ~ #00CC55 0, #990000(dark) */
+/* Old color scheme ~ #9900CC 0, #990000(dark) */
 body {
   color:white !important;
   background-color:#222 !important;
@@ -21,10 +21,10 @@ input{
 }
 button {
   border: solid 1px white !important;
-  background-image: linear-gradient(to bottom, #00CC55 0, #00992E 100%) !important;
+  background-image: linear-gradient(to bottom, #9900CC 0, #730099 100%) !important;
 }
 button:hover {z
-  background-image: linear-gradient(to bottom, #00992E 0, #00CC55 100%) !important;
+  background-image: linear-gradient(to bottom, #730099 0, #9900CC 100%) !important;
 }
 .panel-heading {
   background-image: linear-gradient(tp bpttp,. #f5f5f5, #linear-gradient(to bottom,#B91D1D 0, #00ff00 100%) !important;
