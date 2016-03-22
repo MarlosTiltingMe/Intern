@@ -162,6 +162,15 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
             $http.get('/api/test/').success(function(data) {
 
+              //If request doesn't fail, archives song as well as queues.
+              SongService.create({
+                  song: id,
+                  minutes: obj.minutes[0],
+                  seconds: obj.seconds,
+                  start_time: startTime,
+                  title: obj.title,
+                  requester: data.id
+              }).success(function(resp) {
                 SongService.archive({
                     song: id,
                     upvotes: 1,
@@ -170,16 +179,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                     minutes: obj.minutes[0],
                     seconds: obj.seconds
                 });
-
-                SongService.create({
-                    song: id,
-                    minutes: obj.minutes[0],
-                    seconds: obj.seconds,
-                    start_time: startTime,
-                    title: obj.title,
-                    requester: data.id
-                });
-
+              });
             });
         });
     }
