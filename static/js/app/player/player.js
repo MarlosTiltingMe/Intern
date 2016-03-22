@@ -179,6 +179,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                     minutes: obj.minutes[0],
                     seconds: obj.seconds
                 });
+                alert('Song requested.');
               });
             });
         });
