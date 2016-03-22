@@ -100,10 +100,12 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
                 var parsedTime = data.items[0].contentDetails.duration.split('PT')[1];
                 obj.minutes = parsedTime.split('M');
-                obj.seconds = obj.minutes[1].split('S')[0];
 
-                console.log(obj.minutes[0]);
-                console.log(obj.seconds);
+                if (obj.minutes[1].indexOf('S') > -1) {
+                  obj.seconds = obj.minutes[1].split('S')[0];
+                } else {
+                  obj.seconds = '1';
+                }
 
                 $http.get(perId).success(function(resp) {
                   obj.title = resp.items[0].snippet.title;
@@ -150,15 +152,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
     $scope.create = function(id, obj) {
         getPrevious(function(data) {
-
-            if (data.length > 0) {
-                var startTime = moment(data[0].start_time)
-                  .add(data[0].minutes, 'm').add(
-                    data[0].seconds, 's'
-                ).zone("+05:00").format();
-            } else {
-                var startTime = moment().zone("+05:00").format();
-            }
+          var startTime = moment();
 
             $http.get('/api/test/').success(function(data) {
 
@@ -180,6 +174,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                     seconds: obj.seconds
                 });
                 alert('Song requested.');
+                $scope.req = '';
               });
             });
         });

@@ -46,6 +46,8 @@ class SongSerializer(serializers.ModelSerializer):
         start_time = str(datetime.now())
         minutes = nMinutes
         seconds = nSeconds
+        if not seconds:
+            seconds = '1'
 
         if "Z" not in start_time:
             parse = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S.%f')

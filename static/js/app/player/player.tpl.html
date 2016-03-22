@@ -15,8 +15,8 @@
 
   <!-- Player Controls -->
     <ng-switch on="isMuted">
-      <input style="width:18%;"  type="text" name="song" id="go" ng-model="song">
-      <button style="width:20%;"  id="go" ng-click="calculateDur(song)">Request</button>
+      <input style="width:18%;"  type="text" name="song" id="go songReq" ng-model="song">
+      <button style="width:20%;"  id="go" ng-model="req" ng-click="calculateDur(song)">Request</button>
 
       <button style="width:20%;" ng-click="volUp()" id="go">
         <i class="glyphicon glyphicon-plus"></i></button>

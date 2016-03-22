@@ -13,7 +13,7 @@ class Archive(models.Model):
     title = models.CharField(default='Pre-update request', max_length=100)
     minutes = models.IntegerField(default='1')
     seconds = models.IntegerField(default='1')
-    
+
     def save(self, *args, **kwargs):
         options = self.song and {'song': self.song} or {}
         super(Archive, self).save(*args, **kwargs)
