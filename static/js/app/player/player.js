@@ -17,13 +17,21 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       return $scope.youtube.player.getVolume();
     }
 
+    $scope.getQueue = function(){
+      $interval(function() {
+        SongService.list().success(function(data) {
+          $scope.queueList = data;
+        });
+      }, 15000);
+    }
+
     $scope.timer = function() {
       $interval(function() {
         var totalTime = $scope.youtube.duration;
         var curTime = Math.round($scope.youtube.curTime);
         var timeDifference = (curTime / totalTime) * 100;
         $scope.prog = Math.round(timeDifference);
-      }, 1000);
+      }, 500);
     }
 
     $scope.mute = function() {
@@ -79,6 +87,11 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
             $scope.timer();
             $scope.$apply;
         });
+
+        SongService.list().success(function(data) {
+          $scope.queueList = data;
+          $scope.getQueue();
+        });
     }
 
     $scope.calculateDur = function(id) {
@@ -133,7 +146,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     }
 
     $scope.newHistory = function() {
-      console.log('new');
       $scope.init();
     }
 

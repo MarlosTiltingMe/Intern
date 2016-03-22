@@ -39,7 +39,7 @@
 
   <!-- Archived List -->
   <div class="panel panel-default">
-    <div class="panel-heading">History({{archiveList.length}})
+    <div class="panel-heading">Queue({{queueList.length}})
       <i ng-click="newHistory()" class="glyphicon glyphicon-refresh"></i></div>
     <table class=table>
        <thead>
@@ -50,9 +50,9 @@
            </tr>
        </thead>
        <tbody>
-         <tr ng-repeat="archive in archiveList">
+         <tr ng-repeat="archive in queueList">
            <td><a href="http://youtube.com/watch?v={{archive.song}}">
-             {{archive.song}}</a></td>
+             {{archive.title}}</a></td>
            <td>{{archive.created | date}}</td>
            <td>{{map(archive.requester)}}</td>
          </tr>

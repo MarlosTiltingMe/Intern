@@ -4,10 +4,7 @@ AuthService.$inject = ['$cookies', '$http'];
 function AuthService($cookies, $http) {
   var AuthService = {
     login: login,
-    logout: logout,
-    register: register,
-    setAuthenticatedAccount: setAuthenticatedAccount,
-    unauthenticate: unauthenticate
+    register: register
   };
 
   return AuthService;
@@ -19,28 +16,12 @@ function AuthService($cookies, $http) {
     }).then(loginSuccessFn, loginErrorFn);
 
     function loginSuccessFn(data, status, headers, config) {
-      AuthService.setAuthenticatedAccount(data.data);
       window.location = '/';
     }
 
     function loginErrorFn(data, status, headers, config) {
       window.location = '/login';
     }
-  }
-
-  function logout() {
-    return $http.post('/api/auth/logout/')
-    .then(logoutSuccessFn, logoutErrorFn);
-
-      function logoutSuccessFn(data, status, headers, config) {
-        AuthService.unauthenticate();
-        alert('You\'ve been logged out.');
-        window.location = '/';
-      }
-
-      function logoutErrorFn(data, status, headers, config) {
-        alert("Ruh roh, raggy! Ran into an error whilst trying to log you out!.");
-      }
   }
 
   function register(email, username, password) {
@@ -58,15 +39,5 @@ function AuthService($cookies, $http) {
     function registerErrorFn(data, status, headers, config) {
       alert("Registration error xdxd");
     }
-  }
-
-  function setAuthenticatedAccount(account) {
-    return $http.get('/api/user/' + account.username + '/').success(function(data) {
-      //$cookies.put('sessionid', JSON.stringify(account));
-    });
-  }
-
-  function unauthenticate() {
-    //$cookies.remove('sessionid');
   }
 }

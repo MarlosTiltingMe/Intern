@@ -51,7 +51,6 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
       var minutes = archivedSong.minutes;
       var seconds = archivedSong.seconds;
 
-      console.log(archivedSong);
       $rootScope.$broadcast("get_archived",
       {
         param: { title },
@@ -117,7 +116,7 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
   function onTubeStateChange(event) {
     if (event.data == YT.PlayerState.PLAYING) {
       tube.duration = tube.player.getDuration();
-      console.log(tube.duration);
+
       $interval(function() {
         tube.curTime = tube.player.getCurrentTime();
       }, 1000);
