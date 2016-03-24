@@ -2,15 +2,8 @@ Intern.controller('PlayerController', PlayerController);
 
 function PlayerController($scope, $http, PlayerService, SongService, UserService,
   $interval) {
-    start();
 
     var obj = {};
-
-    $scope.onLoad = function() {
-      $scope.youtube.ready = true;
-      PlayerService.bind('player');
-      PlayerService.load();
-    }
 
     $scope.isMuted = false;
     function curVol() {
@@ -75,23 +68,20 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       $scope.$apply;
     });
 
-    function start() {
-        $scope.youtube = PlayerService.getTube();
-        $scope.pList = true;
-    }
-
     $scope.init = function() {
-        SongService.archiveList().success(function(data) {
-            $scope.archiveList = data;
-            idToName();
-            $scope.timer();
-            $scope.$apply;
-        });
+      $scope.youtube = PlayerService.getTube();
+      $scope.pList = true;
+      SongService.archiveList().success(function(data) {
+          $scope.archiveList = data;
+          idToName();
+          $scope.timer();
+          $scope.$apply;
+      });
 
-        SongService.list().success(function(data) {
-          $scope.queueList = data;
-          $scope.getQueue();
-        });
+      SongService.list().success(function(data) {
+        $scope.queueList = data;
+        $scope.getQueue();
+      });
     }
 
     $scope.calculateDur = function(id) {

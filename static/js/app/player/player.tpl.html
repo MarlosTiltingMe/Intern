@@ -15,7 +15,7 @@
 
   <!-- Player Controls -->
     <ng-switch on="isMuted">
-      <input style="width:18%;"  type="text" name="song" id="go songReq" ng-model="song">
+      <input style="width:18%;"  type="text" name="song" id="go" ng-model="song">
       <button style="width:20%;"  id="go" ng-model="req" ng-click="calculateDur(song)">Request</button>
 
       <button style="width:20%;" ng-click="volUp()" id="go">
@@ -39,7 +39,7 @@
 
   <!-- Archived List -->
   <div class="panel panel-default">
-    <div class="panel-heading">Queue({{queueList.length}})
+    <div class="panel-heading">Queue({{queueList.length - 1}})
       <i ng-click="newHistory()" class="glyphicon glyphicon-refresh"></i></div>
     <table class=table>
        <thead>
@@ -50,11 +50,11 @@
            </tr>
        </thead>
        <tbody>
-         <tr ng-repeat="archive in queueList">
-           <td><a href="http://youtube.com/watch?v={{archive.song}}">
-             {{archive.title}}</a></td>
-           <td>{{archive.created | date}}</td>
-           <td>{{map(archive.requester)}}</td>
+         <tr ng-repeat="queue in queueList">
+           <td ng-if="$index > 0"><a href="http://youtube.com/watch?v={{queue.song}}">
+             {{queue.title}}</a></td>
+           <td ng-if="$index > 0">{{queue.created | date}}</td>
+           <td ng-if="$index > 0">{{map(queue.requester)}}</td>
          </tr>
        </tbody>
      </table>
