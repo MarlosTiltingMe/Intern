@@ -20,7 +20,8 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     playerId: null,
     state: 'stopped',
     duration: null,
-    curTime: null
+    curTime: null,
+    isBound: null
   };
 
   var songQueue = {
@@ -31,15 +32,31 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     length: null
   };
 
+  service.bindPlayer = function() {
+    console.log('Bound');
+    tube.ready = true;
+    service.bind('player');
+    service.load();
+    $rootScope.apply;
+    tube.isBound = true;
+  }
+
+  service.checkPlayer = function() {
+    setInterval(function() {
+      if(!tube.isBound) {
+        console.log('Player failed to bind. Binding now. You\'re welcome.');
+        service.bindPlayer();
+      }
+    }, 1500);
+  }
+
   //Player is ready
-  (function(){
-    $window.onYouTubeIframeAPIReady = function() {
-      tube.ready = true;
-      service.bind('player');
-      service.load();
-      $rootScope.$apply();
-    }
-  })();
+  $window.onYouTubeIframeAPIReady = function() {
+    tube.ready = true;
+    service.bind('player');
+    service.load();
+    $rootScope.$apply();
+  }
 
   //Does exactly what it says, man.
   function playArchived() {

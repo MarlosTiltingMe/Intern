@@ -1,8 +1,6 @@
 <div class="container" ng-controller="PlayerController" ng-init="init()">
   <div class="alert alert-danger" role="alert">
-  Don't see a player? Blame Angular's routing. Or me. Either way, a refresh
-  probably won't do the trick. Be sure that you're signed in to your account.
-  If it's still not binding, close the tab and re-visit the site.</div>
+  Worst engineer at the company, but third coolest.</div>
   <div class="panel panel-default">
     <div class="panel-heading"> {{title}} <p class="pull-right">
       {{ map(requester) }} </p></div>
@@ -39,7 +37,7 @@
 
   <!-- Archived List -->
   <div class="panel panel-default">
-    <div class="panel-heading">Queue({{queueList.length - 1}})
+    <div class="panel-heading">Queue({{queueList.length}})
       <i ng-click="newHistory()" class="glyphicon glyphicon-refresh"></i></div>
     <table class=table>
        <thead>

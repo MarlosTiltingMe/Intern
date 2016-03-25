@@ -40,6 +40,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         $scope.youtube.player.unMute();
       }
     }
+
     $scope.volDown = function() {
       var newVol = curVol() - 10;
       $scope.youtube.player.setVolume(newVol);
@@ -68,7 +69,12 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       $scope.$apply;
     });
 
+    $scope.bindPlayer = function() {
+      PlayerService.bindPlayer();
+    }
+
     $scope.init = function() {
+      PlayerService.checkPlayer();
       $scope.youtube = PlayerService.getTube();
       $scope.pList = true;
       SongService.archiveList().success(function(data) {
