@@ -32,6 +32,13 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     length: null
   };
 
+
+  service.favorite = function(id, post, call) {
+    $http.patch('/api/Archives/'+ id + '/', post).success(function() {
+      if(call)  call();
+    });
+  }
+
   service.bindPlayer = function() {
     console.log('Bound');
     tube.ready = true;
@@ -56,6 +63,7 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     service.bind('player');
     service.load();
     $rootScope.$apply();
+    tube.isBound = true;
   }
 
   //Does exactly what it says, man.
@@ -203,6 +211,10 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
   this.getTube = function() {
     return tube;
+  }
+
+  this.getSong = function() {
+    return songQueue;
   }
 
   //Key binds. down mutes client. up unmutes.

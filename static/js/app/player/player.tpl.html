@@ -29,6 +29,9 @@
           <i class="glyphicon glyphicon-volume-off"></i></button>
         </ng-switch>
 
+        <button ng-click="favorite()" style="width:100%;" id="go">
+          <i class="glyphicon glyphicon-heart"></i>
+        </button>
       <div class="progress">
         <div class="progress-bar progress-bar-success progress-bar-striped active"
           role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"
@@ -42,7 +45,7 @@
     <table class=table>
        <thead>
            <tr>
-               <th>ID</th>
+               <th>Song</th>
                <th>When</th>
                <th>Who</th>
            </tr>
@@ -53,6 +56,26 @@
              {{queue.title}}</a></td>
            <td ng-if="$index > 0">{{queue.created | date}}</td>
            <td ng-if="$index > 0">{{map(queue.requester)}}</td>
+         </tr>
+       </tbody>
+     </table>
+  </div>
+
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Favorites({{favoriteList.songs.length}})
+  </div>
+    <table class=table>
+       <thead>
+           <tr>
+               <th>Song</th>
+           </tr>
+       </thead>
+       <tbody>
+         <tr ng-repeat="favorite in favoriteList.songs">
+           <td><a href="http://youtube.com/watch?v={{favorite.song}}">
+             {{favorite.title}}</a></td>
          </tr>
        </tbody>
      </table>

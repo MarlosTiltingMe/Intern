@@ -11,7 +11,7 @@ class ArchiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Archive
         fields = ('url', 'created', 'id', 'song', 'upvotes', 'requester',
-         'title', 'minutes', 'seconds')
+         'title', 'minutes', 'seconds', 'favorites')
 
     def create(self, validated_data):
         return Archive.objects.create(

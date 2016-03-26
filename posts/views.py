@@ -21,7 +21,6 @@ class TestViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
-
 class ArchiveList(generics.ListCreateAPIView):
     """
     List all Archives, homie

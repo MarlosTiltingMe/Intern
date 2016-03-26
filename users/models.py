@@ -35,7 +35,6 @@ class UserAccount(AbstractBaseUser):
     username = models.CharField(max_length=16, unique=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     is_admin = models.BooleanField(default=False)
-	
     objects = UserAccountManager()
 
     USERNAME_FIELD = 'username'

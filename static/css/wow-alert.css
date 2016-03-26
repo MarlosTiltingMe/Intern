@@ -54,11 +54,11 @@
     display: block;
     margin: 0 auto;
     width: 100px;
-    background: #9900CC;
+    background: #FF0000;
     text-decoration: none;
     height: 30px;
     line-height: 30px;
 }
 .wow-alert-content a:hover {
-    background: #730099;
+    background: #A80303;
 }

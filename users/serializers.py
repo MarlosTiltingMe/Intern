@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from users.models import UserAccount
 from django.contrib.auth import get_user_model
-
+from posts.models import Songs
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
+    favorites = serializers.PrimaryKeyRelatedField(many=True,
+        queryset = Songs.objects.all())
 
     class Meta:
         model = UserAccount

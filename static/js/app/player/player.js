@@ -10,6 +10,42 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       return $scope.youtube.player.getVolume();
     }
 
+    $scope.favorite = function() {
+      $http.get('/api/test/').success(function(user) {
+        $http.get('/api/Archives/').success(function(songs) {
+          for(var c = 0; c < songs.length; c++) {
+            var song = $scope.youtube.player.getVideoUrl().split('v=')[1];
+            if(songs[c].song == song) {
+              var curFavs = songs[c].favorites;
+              curFavs.push(user.id);
+
+
+              PlayerService.favorite(songs[c].id, {favorites:curFavs}, function(){
+                alert('Song added to favorites!');
+                $scope.getFavorites();
+              });
+
+              $scope.$apply;
+              break;
+            }
+          }
+        });
+      });
+    }
+
+    $scope.getFavorites = function() {
+      $scope.favoriteList = {songs:[]};
+        $http.get('/api/test/').success(function(data) {
+            for (var l = 0; l < data.favorites.length; l++) {
+                $http.get('/api/Archives/' + data.favorites[l] + '/').success(function(a) {
+                  var title = a.title;
+                      song = a.song;
+                  $scope.favoriteList.songs.push({title, song});
+                });
+            }
+        });
+    }
+
     $scope.getQueue = function(){
       $interval(function() {
         SongService.list().success(function(data) {
@@ -17,6 +53,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         });
       }, 15000);
     }
+
 
     $scope.timer = function() {
       $interval(function() {
@@ -77,6 +114,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       PlayerService.checkPlayer();
       $scope.youtube = PlayerService.getTube();
       $scope.pList = true;
+      $scope.getFavorites();
       SongService.archiveList().success(function(data) {
           $scope.archiveList = data;
           idToName();
@@ -145,22 +183,10 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       $scope.init();
     }
 
-    /**
-    This function's pretty cool imo. It's nothing special, though.
-    It's just grabbing the last-queued song's start time and duration then
-    it adds them together to output a estimated start-time of the newly
-    requested song. Also posts the new song with its' duration.
-
-    Also, to those who noticed... Yes, this means this will only work properly
-    in one timezone. My timezone. This is just testing the concept. If this
-    function is still in the repo, that means I'm still testing/messing around
-    with things. Don't open an issue, and more importantly, don't dm me
-    on Twitter. I don't care.
-    **/
 
     $scope.create = function(id, obj) {
         getPrevious(function(data) {
-          var startTime = moment();
+          var startTime = moment(); //temporary
 
             $http.get('/api/test/').success(function(data) {
 
@@ -180,9 +206,10 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                     title: obj.title,
                     minutes: obj.minutes[0],
                     seconds: obj.seconds
+                }).success(function(arch) {
+                  PlayerService.getSong.archiveId = arch.id;
                 });
                 alert('Song requested.');
-                $scope.req = '';
               });
             });
         });
@@ -202,6 +229,11 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
     $scope.map = function(key) {
         return $scope.hmap.get(key);
+    }
+
+    $scope.getFMap = function(key) {
+      //console.log($scope.fMap);
+      return $scope.fMap.get(key);
     }
 
     function getList(callback) {
