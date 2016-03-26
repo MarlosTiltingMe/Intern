@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
 from intern import settings
 from django.db import models
-from django.contrib.auth import get_user_model
 
 class UserAccountManager(BaseUserManager):
 	def create_user(self, email, username, password):
@@ -36,7 +35,7 @@ class UserAccount(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     is_admin = models.BooleanField(default=False)
     objects = UserAccountManager()
-
+    favorites = models.ManyToManyField('posts.Archive', related_name='favorites')
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 

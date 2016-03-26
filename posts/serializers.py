@@ -7,7 +7,6 @@ from datetime import datetime, timedelta, date
 from intern import settings
 
 class ArchiveSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Archive
         fields = ('url', 'created', 'id', 'song', 'upvotes', 'requester',

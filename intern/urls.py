@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.urlpatterns import format_suffix_patterns
-from users.views import AccountViewSet, UserDetail, UserByName, LoginView, LogoutView
+from users.views import AccountViewSet, UserViewSet, UserDetail, UserByName, LoginView, LogoutView
 from posts import views
 from django.contrib import admin
 from intern.views import IndexView
@@ -13,9 +13,24 @@ router.register(r'Archives', views.ArchiveViewSet)
 router.register(r'songs', views.SongViewSet)
 router.register(r'test', views.TestViewSet)
 
+
+user_list = UserViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+user_detail = UserViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'post': 'create'
+})
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(router.urls)),
+    url(r'^api/users/$', user_list, name='user-list'),
+    url(r'^api/users/(?P<pk>[0-9]+)/$', user_detail, name='user-detail'),
     url(r'^api/Archives/$',
         views.ArchiveList.as_view(),
         name='Archive-list'),
@@ -32,8 +47,5 @@ urlpatterns = [
     url(r'^api/songs/$',
         views.SongList.as_view(),
         name='song-list'),
-    url(r'^api/song/(?P<song>.+)/$',
-        views.SongByName.as_view(),
-        name='song-detail'),
     url(r'^.*$', IndexView.as_view(), name='index'),
 ]

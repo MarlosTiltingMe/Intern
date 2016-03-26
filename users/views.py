@@ -19,6 +19,10 @@ class UserByName(generics.ListCreateAPIView):
         username = self.kwargs['username']
         return UserAccount.objects.filter(username=username)
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = UserAccount.objects.all()
+    serializer_class = UserSerializer
+
 class AccountViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     queryset = UserAccount.objects.all()

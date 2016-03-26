@@ -21,6 +21,11 @@ SITE_ID = 1
 
 AUTH_USER_MODEL = 'users.UserAccount'
 
+#Authentication backends
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.

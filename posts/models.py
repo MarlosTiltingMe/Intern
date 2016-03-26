@@ -13,7 +13,6 @@ class Archive(models.Model):
     title = models.CharField(default='Pre-update request', max_length=100)
     minutes = models.IntegerField(default='1')
     seconds = models.IntegerField(default='1')
-    favorites = models.ManyToManyField('users.UserAccount', related_name='favorites')
 
     def __str__(self):
         return self.song

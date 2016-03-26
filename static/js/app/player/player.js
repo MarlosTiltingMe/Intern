@@ -19,7 +19,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
               var curFavs = songs[c].favorites;
               curFavs.push(user.id);
 
-
+              console.log(songs[c].id + ':' + curFavs);
               PlayerService.favorite(songs[c].id, {favorites:curFavs}, function(){
                 alert('Song added to favorites!');
                 $scope.getFavorites();
