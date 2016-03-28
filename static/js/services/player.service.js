@@ -49,12 +49,8 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
   }
 
   service.checkPlayer = function() {
-    setInterval(function() {
-      if(!tube.isBound) {
-        console.log('Player failed to bind. Binding now. You\'re welcome.');
-        service.bindPlayer();
-      }
-    }, 1500);
+    console.log('Player failed to bind. Binding now. You\'re welcome.');
+    service.bindPlayer();
   }
 
   //Player is ready
