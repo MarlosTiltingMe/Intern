@@ -51,7 +51,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         SongService.list().success(function(data) {
           $scope.queueList = data;
         });
-      }, 15000);
+      }, 5000);
     }
 
 
@@ -111,7 +111,10 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     }
 
     $scope.init = function() {
-      PlayerService.checkPlayer();
+      setTimeout(function() {
+        PlayerService.checkPlayer();
+      }, 1000);
+      $scope.newHistory();
       $scope.youtube = PlayerService.getTube();
       $scope.pList = true;
       $scope.getFavorites();
@@ -120,11 +123,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
           idToName();
           $scope.timer();
           $scope.$apply;
-      });
-
-      SongService.list().success(function(data) {
-        $scope.queueList = data;
-        $scope.getQueue();
       });
     }
 
@@ -180,7 +178,10 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     }
 
     $scope.newHistory = function() {
-      $scope.init();
+      SongService.list().success(function(data) {
+        $scope.queueList = data;
+        $scope.getQueue();
+      });
     }
 
 

@@ -40,7 +40,6 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
   }
 
   service.bindPlayer = function() {
-    console.log('Bound');
     tube.ready = true;
     service.bind('player');
     service.load();
@@ -48,18 +47,23 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     tube.isBound = true;
   }
 
-  service.checkPlayer = function() {
+  service.checkPlayer = function(call) {
     console.log('Player failed to bind. Binding now. You\'re welcome.');
     service.bindPlayer();
+    if(call)  call();
   }
 
   //Player is ready
   $window.onYouTubeIframeAPIReady = function() {
+    service.bindIfNot();
+  }
+
+
+  service.bindIfNot = function() {
     tube.ready = true;
     service.bind('player');
     service.load();
     $rootScope.$apply();
-    tube.isBound = true;
   }
 
   //Does exactly what it says, man.
