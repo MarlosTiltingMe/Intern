@@ -206,7 +206,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                     requester: data.id,
                     title: obj.title,
                     minutes: obj.minutes[0],
-                    seconds: obj.seconds
+                    seconds: obj.seconds,
+                    favorites:[]
                 }).success(function(arch) {
                   PlayerService.getSong.archiveId = arch.id;
                 });
