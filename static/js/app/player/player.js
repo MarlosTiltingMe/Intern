@@ -208,8 +208,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                     minutes: obj.minutes[0],
                     seconds: obj.seconds,
                     favorites:[]
-                }).success(function(arch) {
-                  PlayerService.getSong.archiveId = arch.id;
                 });
                 alert('Song requested.');
               });

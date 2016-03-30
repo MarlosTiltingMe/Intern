@@ -101,7 +101,10 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
         $rootScope.$broadcast("get_title");
         loop(songQueue);
-        if(callback)  callback();
+        if(callback) {
+          callback();
+        }
+        
       } else {
         playArchived();
       }
@@ -121,9 +124,9 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
           }
 
           function b(data, status, headers, config) {
-              getSongs(ready);
+            getSongs(ready);
           }
-      }, timer - 1000);
+      }, timer);
   }
 
   //Event bus
