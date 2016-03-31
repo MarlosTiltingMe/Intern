@@ -104,7 +104,7 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
         if(callback) {
           callback();
         }
-        
+
       } else {
         playArchived();
       }
@@ -126,7 +126,7 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
           function b(data, status, headers, config) {
             getSongs(ready);
           }
-      }, timer);
+      }, timer - 1000);
   }
 
   //Event bus
@@ -154,8 +154,7 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
       tube.player.playVideo();
     } else if (event.data == YT.PlayerState.ENDED) {
       tube.state = 'ended';
-      getSongs(ready);
-      $rootScope.$apply();
+      location.reload();
     }
   }
 
