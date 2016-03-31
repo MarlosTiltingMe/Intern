@@ -12,8 +12,8 @@
   </div>
 
   <!-- Player Controls -->
+  <input style="width:18%;" type="text" name="song" id="go" ng-model="song">
     <ng-switch on="isMuted">
-      <input style="width:18%;"  type="text" name="song" id="go" ng-model="song">
       <button style="width:20%;"  id="go" ng-model="req" ng-click="calculateDur(song)">Request</button>
 
       <button style="width:20%;" ng-click="volUp()" id="go">
@@ -61,8 +61,6 @@
        </tbody>
      </table>
   </div>
-
-
 
   <div class="panel panel-default">
     <div class="panel-heading">Favorites({{favoriteList.songs.length}})

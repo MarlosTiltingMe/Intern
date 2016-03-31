@@ -53,21 +53,9 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     if(call)  call();
   }
 
-  //Player is ready
-  $window.onYouTubeIframeAPIReady = function() {
-    service.bindIfNot();
-  }
-
-
-  service.bindIfNot = function() {
-    tube.ready = true;
-    service.bind('player');
-    service.load();
-    $rootScope.$apply();
-  }
-
   //Does exactly what it says, man.
   function playArchived() {
+    console.log('Playing archived. Should I be playing a queued song? Tell the dev.');
     return SongService.archiveList().success(function(data) {
 
       var archivedSong = data[Math.floor(Math.random() * data.length)];
@@ -90,9 +78,9 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
   }
 
   function getSongs(callback) {
-
     SongService.list().success(function(data) {
       if (data.length) {
+        console.log('got song:' + data[0].id);
         songQueue.id = data[0].id;
         songQueue.song = data[0].song;
         songQueue.seconds = data[0].seconds;
@@ -101,10 +89,8 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
         $rootScope.$broadcast("get_title");
         loop(songQueue);
-        if(callback) {
-          callback();
-        }
 
+        if(callback) { callback(); }
       } else {
         playArchived();
       }
@@ -120,18 +106,23 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
           SongService.dispose(queue.id).then(a, b);
 
           function a(data, status, headers, config) {
+            console.log('a');
             getSongs(ready);
           }
 
           function b(data, status, headers, config) {
             getSongs(ready);
           }
+
       }, timer - 1000);
+      ready();
   }
 
   //Event bus
   function onTubeReady(event) {
-    getSongs(ready);
+    if (tube.ready) {
+      getSongs();
+    }
   }
 
   function ready() {
@@ -147,14 +138,14 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
       $interval(function() {
         tube.curTime = tube.player.getCurrentTime();
-      }, 1000);
+      }, 500);
 
       tube.state = 'playing';
     } else if (event.data == YT.PlayerState.PAUSED) {
       tube.player.playVideo();
     } else if (event.data == YT.PlayerState.ENDED) {
       tube.state = 'ended';
-      location.reload();
+      playArchived();
     }
   }
 
@@ -217,19 +208,5 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
   this.getSong = function() {
     return songQueue;
-  }
-
-  //Key binds. down mutes client. up unmutes.
-  document.onkeydown = function(e) {
-    e = e || window.event;
-    switch (e.which || e.keyCode) {
-      case 39: //down
-        tube.player.mute();
-        break;
-
-      case 37: //up
-        tube.player.unMute();
-        break;
-    }
   }
 }

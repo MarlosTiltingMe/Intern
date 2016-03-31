@@ -61,7 +61,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         var curTime = Math.round($scope.youtube.curTime);
         var timeDifference = (curTime / totalTime) * 100;
         $scope.prog = Math.round(timeDifference);
-      }, 1000);
+        $scope.$apply;
+      }, 500);
     }
 
     $scope.mute = function() {
