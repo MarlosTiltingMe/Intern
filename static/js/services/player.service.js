@@ -9,6 +9,10 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
   var service = this;
   var obj = {};
 
+  window.YTConfig = {
+    'host': 'https://www.youtube.com'
+  };
+
   var tube = {
     ready: false,
     height: '360',
@@ -138,7 +142,7 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
       $interval(function() {
         tube.curTime = tube.player.getCurrentTime();
-      }, 500);
+      }, 1500);
 
       tube.state = 'playing';
     } else if (event.data == YT.PlayerState.PAUSED) {

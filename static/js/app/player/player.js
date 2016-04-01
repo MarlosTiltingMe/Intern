@@ -62,7 +62,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         var timeDifference = (curTime / totalTime) * 100;
         $scope.prog = Math.round(timeDifference);
         $scope.$apply;
-      }, 500);
+      }, 1500);
     }
 
     $scope.mute = function() {
@@ -134,7 +134,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
             alert('Only request the song id(all text after watch?v=).');
             return false;
         } else {
-            var key = 'AIzaSyBozEtHPwS2fZz3aVpZlaDPeXIzHQeJo7k';
+            var key = 'AIzaSyDgbgFFw5S1jbvRQ3nSx2wJQvsDic24RsQ';
 
             var perId = 'https://www.googleapis.com/youtube/v3/videos?'
             + 'part=snippet&id=' + id + '&key=' + key;
