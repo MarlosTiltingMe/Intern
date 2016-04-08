@@ -37,7 +37,7 @@ function AuthService($cookies, $http) {
     }
 
     function registerErrorFn(data, status, headers, config) {
-      alert("Registration error xdxd");
+      alert("Registration error.");
     }
   }
 }

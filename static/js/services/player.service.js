@@ -59,14 +59,13 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
   //Does exactly what it says, man.
   function playArchived() {
-    console.log('Playing archived. Should I be playing a queued song? Tell the dev.');
     return SongService.archiveList().success(function(data) {
 
-      var archivedSong = data[Math.floor(Math.random() * data.length)];
-      var title = archivedSong.title;
-      var requester = archivedSong.requester;
-      var minutes = archivedSong.minutes;
-      var seconds = archivedSong.seconds;
+      var archivedSong = data[Math.floor(Math.random() * data.length)],
+          title = archivedSong.title,
+          requester = archivedSong.requester,
+          minutes = archivedSong.minutes,
+          seconds = archivedSong.seconds;
 
       $rootScope.$broadcast("get_archived",
       {
@@ -84,12 +83,14 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
   function getSongs(callback) {
     SongService.list().success(function(data) {
       if (data.length) {
-        console.log('got song:' + data[0].id);
-        songQueue.id = data[0].id;
-        songQueue.song = data[0].song;
-        songQueue.seconds = data[0].seconds;
-        songQueue.length = data.length;
-        songQueue.minutes = data[0].minutes;
+
+        songQueue = {
+          id:data[0].id,
+          song:data[0].song,
+          seconds:data[0].seconds,
+          minutes:data[0].minutes,
+          length:data.length
+        }
 
         $rootScope.$broadcast("get_title");
         loop(songQueue);

@@ -16,9 +16,6 @@ body {
 .container input, button {
   margin-bottom:5px;
 }
-input{
-    color: white !important;
-}
 button, #go {
   border: solid 1px white !important;
   background-image: linear-gradient(to bottom, #37737A 0, #28565C 100%) !important;
