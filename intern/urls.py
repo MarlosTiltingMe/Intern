@@ -11,6 +11,7 @@ router = routers.DefaultRouter()
 router.register(r'users', AccountViewSet)
 router.register(r'archives', views.ArchiveViewSet)
 router.register(r'songs', views.SongViewSet)
+router.register(r'current', views.CurrentUser)
 
 
 user_list = UserViewSet.as_view({
