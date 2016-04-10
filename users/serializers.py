@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from users.models import UserAccount
 from posts.models import Songs
+
 User = UserAccount
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
         fields = ('id', 'username', 'email', 'favorites', 'password', 'favorites')
+
         def create(self, validated_data):
             return UserAccount.objects.create(**validated_data)
 

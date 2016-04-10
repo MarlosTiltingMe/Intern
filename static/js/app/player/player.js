@@ -11,8 +11,8 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     }
 
     $scope.favorite = function() {
-      $http.get('/api/test/').success(function(user) {
-        $http.get('/api/Archives/').success(function(songs) {
+      $http.get('/api/current/').success(function(user) {
+        $http.get('/api/archives/').success(function(songs) {
           for(var c = 0; c < songs.length; c++) {
             var song = $scope.youtube.player.getVideoUrl().split('v=')[1];
             if(songs[c].song == song) {
@@ -35,9 +35,9 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
 
     $scope.getFavorites = function() {
       $scope.favoriteList = {songs:[]};
-        $http.get('/api/test/').success(function(data) {
+        $http.get('/api/current/').success(function(data) {
             for (var l = 0; l < data.favorites.length; l++) {
-                $http.get('/api/Archives/' + data.favorites[l] + '/').success(function(a) {
+                $http.get('/api/archives/' + data.favorites[l] + '/').success(function(a) {
                   var title = a.title;
                       song = a.song;
                   $scope.favoriteList.songs.push({title, song});
@@ -190,7 +190,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
         getPrevious(function(data) {
           var startTime = moment(); //temporary
 
-            $http.get('/api/test/').success(function(data) {
+            $http.get('/api/current/').success(function(data) {
 
               //If request doesn't fail, archives song as well as queues.
               SongService.create({

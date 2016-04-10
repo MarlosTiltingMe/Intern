@@ -38,7 +38,7 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
 
   service.favorite = function(id, post, call) {
-    $http.patch('/api/Archives/'+ id + '/', post).success(function() {
+    $http.patch('/api/archives/'+ id + '/', post).success(function() {
       if(call)  call();
     });
   }

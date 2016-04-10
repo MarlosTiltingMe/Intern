@@ -12,11 +12,11 @@ function SongService($http, AuthService) {
   }
 
   function archiveList() {
-    return $http.get('/api/Archives/');
+    return $http.get('/api/archives/');
   }
 
   function archive(post) {
-    return $http.post('/api/Archives/', post);
+    return $http.post('/api/archives/', post);
   }
 
   function get(id) {

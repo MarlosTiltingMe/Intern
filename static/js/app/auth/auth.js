@@ -25,13 +25,13 @@ function AuthController($scope, $http, $cookies, AuthService) {
   }
 
   function currentUser() {
-    $http.get('/api/test/').success(function(data) {
+    $http.get('/api/current/').success(function(data) {
 
       if(data.id) {
         $scope.userModel = data.username;
         return data.username;
       } else {
-        $scope.userModel = 'Anon';
+        //
       }
 
     });
