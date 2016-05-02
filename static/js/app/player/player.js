@@ -10,42 +10,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       return $scope.youtube.player.getVolume();
     }
 
-    $scope.favorite = function() {
-      $http.get('/api/current/').success(function(user) {
-        $http.get('/api/archives/').success(function(songs) {
-          for(var c = 0; c < songs.length; c++) {
-            var song = $scope.youtube.player.getVideoUrl().split('v=')[1];
-            if(songs[c].song == song) {
-              var curFavs = songs[c].favorites;
-              curFavs.push(user.id);
-
-              console.log(songs[c].id + ':' + curFavs);
-              PlayerService.favorite(songs[c].id, {favorites:curFavs}, function(){
-                alert('Song added to favorites!');
-                $scope.getFavorites();
-              });
-
-              $scope.$apply;
-              break;
-            }
-          }
-        });
-      });
-    }
-
-    $scope.getFavorites = function() {
-      $scope.favoriteList = {songs:[]};
-        $http.get('/api/current/').success(function(data) {
-            for (var l = 0; l < data.favorites.length; l++) {
-                $http.get('/api/archives/' + data.favorites[l] + '/').success(function(a) {
-                  var title = a.title;
-                      song = a.song;
-                  $scope.favoriteList.songs.push({title, song});
-                });
-            }
-        });
-    }
-
     $scope.getQueue = function(){
       $interval(function() {
         SongService.list().success(function(data) {
@@ -99,14 +63,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       });
     });
 
-    $scope.$on("get_archived", function(event, args) {
-      $scope.title = args.param.title;
-      $scope.requester = args.owner.requester;
-      $scope.minutes = args.mins.minutes;
-      $scope.seconds = args.secs.seconds;
-      $scope.$apply;
-    });
-
     $scope.bindPlayer = function() {
       PlayerService.bindPlayer();
     }
@@ -118,13 +74,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
       $scope.newHistory();
       $scope.youtube = PlayerService.getTube();
       $scope.pList = true;
-      $scope.getFavorites();
-      SongService.archiveList().success(function(data) {
-          $scope.archiveList = data;
-          idToName();
-          $scope.timer();
-          $scope.$apply;
-      });
+      idToName();
     }
 
     $scope.calculateDur = function(id) {
@@ -134,7 +84,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
             alert('Only request the song id(all text after watch?v=).');
             return false;
         } else {
-            var key = 'AIzaSyDgbgFFw5S1jbvRQ3nSx2wJQvsDic24RsQ';
+            var key = 'AIzaSyDA3GC_BnCeIcWgQ74FTCdOjjA5HCrGz-U';
 
             var perId = 'https://www.googleapis.com/youtube/v3/videos?'
             + 'part=snippet&id=' + id + '&key=' + key;
@@ -201,15 +151,6 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
                   title: obj.title,
                   requester: data.id
               }).success(function(resp) {
-                SongService.archive({
-                    song: id,
-                    upvotes: 1,
-                    requester: data.id,
-                    title: obj.title,
-                    minutes: obj.minutes[0],
-                    seconds: obj.seconds,
-                    favorites:[]
-                });
                 alert('Song requested.');
               });
             });
@@ -229,7 +170,7 @@ function PlayerController($scope, $http, PlayerService, SongService, UserService
     }
 
     $scope.map = function(key) {
-        return $scope.hmap.get(key);
+      return $scope.hmap.get(key);
     }
 
     $scope.getFMap = function(key) {

@@ -53,7 +53,7 @@ class UserAccount(AbstractBaseUser):
     def get_full_name(self):
 	    return self.full_name
     def get_short_name(self):
-	    return self.short_name
+	    print('a')
     @property
     def is_superuser(self):
 	    return self.is_admin

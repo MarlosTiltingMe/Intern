@@ -9,7 +9,7 @@ class Archive(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     song = models.CharField(max_length=72, unique=False)
     upvotes = models.IntegerField(default=1)
-    requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(default='Pre-update request', max_length=100)
     minutes = models.IntegerField(default='1')
     seconds = models.IntegerField(default='1')
@@ -34,7 +34,7 @@ class Songs(models.Model):
     minutes = models.IntegerField(default='1');
     seconds = models.IntegerField(default='1');
     title = models.CharField(default='None', max_length=100)
-    requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    requester = models.ForeignKey(UserAccount, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.song

@@ -36,13 +36,6 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     length: null
   };
 
-
-  service.favorite = function(id, post, call) {
-    $http.patch('/api/archives/'+ id + '/', post).success(function() {
-      if(call)  call();
-    });
-  }
-
   service.bindPlayer = function() {
     tube.ready = true;
     service.bind('player');
@@ -57,27 +50,25 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     if(call)  call();
   }
 
-  //Does exactly what it says, man.
-  function playArchived() {
-    return SongService.archiveList().success(function(data) {
+  function deadPlayer(call) {
+    check = setInterval(function() {
+      SongService.list().success(function(data) {
+        if (data.length) {
+          songQueue = {
+            id:data[0].id,
+            song:data[0].song,
+            seconds:data[0].seconds,
+            minutes:data[0].minutes,
+            length:data.length
+          }
 
-      var archivedSong = data[Math.floor(Math.random() * data.length)],
-          title = archivedSong.title,
-          requester = archivedSong.requester,
-          minutes = archivedSong.minutes,
-          seconds = archivedSong.seconds;
-
-      $rootScope.$broadcast("get_archived",
-      {
-        param: { title },
-        owner: { requester },
-        mins: { minutes },
-        secs: { seconds }
+          $rootScope.$broadcast("get_title");
+          ready(songQueue);
+          clearInterval(check);
+        }
       });
-
-      service.launch(archivedSong.song);
-      tube.player.playVideo();
-    });
+    }, 2000);
+    if (call)  call();
   }
 
   function getSongs(callback) {
@@ -93,11 +84,13 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
         }
 
         $rootScope.$broadcast("get_title");
-        loop(songQueue);
+        ready(songQueue);
 
         if(callback) { callback(); }
       } else {
-        playArchived();
+        setTimeout(function() {
+          getSongs();
+        }, 500);
       }
     });
   }
@@ -111,16 +104,13 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
           SongService.dispose(queue.id).then(a, b);
 
           function a(data, status, headers, config) {
-            console.log('a');
             getSongs(ready);
           }
 
           function b(data, status, headers, config) {
             getSongs(ready);
           }
-
       }, timer - 1000);
-      ready();
   }
 
   //Event bus
@@ -130,7 +120,8 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
     }
   }
 
-  function ready() {
+  function ready(song, call) {
+    loop(song);
     tube.player.loadVideoById(songQueue.song);
     tube.player.playVideo();
   }
@@ -143,14 +134,14 @@ function PlayerService($window, $http, $rootScope, SongService, $interval) {
 
       $interval(function() {
         tube.curTime = tube.player.getCurrentTime();
-      }, 1500);
+      }, 1000);
 
       tube.state = 'playing';
     } else if (event.data == YT.PlayerState.PAUSED) {
       tube.player.playVideo();
     } else if (event.data == YT.PlayerState.ENDED) {
       tube.state = 'ended';
-      playArchived();
+      deadPlayer();
     }
   }
 
